@@ -1,537 +1,259 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar" dir="rtl">
   <head>
-    <meta charset="utf-8" />
-    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI-Powered Curriculum Framework Designer</title>
 
-    <title>تصميم إطار مناهج بالذكاء الاصطناعي</title>
-    <meta content="" name="description" />
-    <meta content="" name="keywords" />
-
-    <!-- Favicons -->
-    <link href="assets/img/favicon.png" rel="icon" />
-    <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon" />
-
-    <!-- Google Fonts -->
-    <link
-      href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
-      rel="stylesheet"
-    />
-
-    <!-- Vendor CSS Files -->
-    <link href="assets/vendor/aos/aos.css" rel="stylesheet" />
+    <!-- Bootstrap CSS -->
     <link
       href="assets/vendor/bootstrap/css/bootstrap.min.css"
       rel="stylesheet"
     />
+    <!-- Bootstrap Icons CSS (assuming path from previous project structure) -->
     <link
       href="assets/vendor/bootstrap-icons/bootstrap-icons.css"
       rel="stylesheet"
     />
-    <link
-      href="assets/vendor/glightbox/css/glightbox.min.css"
-      rel="stylesheet"
-    />
-    <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet" />
-
-    <!-- Main CSS File -->
+    <!-- Custom CSS -->
     <link href="assets/css/style.css" rel="stylesheet" />
   </head>
-
   <body>
-    <main id="main" dir="rtl">
-      <!-- ======= Form Section ======= -->
-      <section>
-        <div class="container" data-aos="fade-up">
-          <div class="section-title">
-            <h2>أولاً: معلومات عامة عن التخصص ووصف المهنة</h2>
-            <p>معلومات عامة عن التخصص (المنظري/المصنع):</p>
+    <div class="container mt-5">
+      <header class="text-center mb-4">
+        <h1>
+          <i class="bi bi-magic"></i> AI-Powered Curriculum Framework Designer
+        </h1>
+        <p class="lead">
+          تصميم إطار عمل المناهج الدراسية بخطوات مدعومة بالذكاء الاصطناعي
+        </p>
+      </header>
+
+      <!-- Step 1: Job Description -->
+      <div id="step1" class="step-section card shadow-sm mb-4">
+        <div class="card-header bg-primary text-white">
+          <h2 class="h5 mb-0">
+            <i class="bi bi-card-text"></i> الخطوة 1: وصف الوظيفة
+          </h2>
+        </div>
+        <div class="card-body">
+          <div class="mb-3">
+            <label for="specializationInfo" class="form-label"
+              >معلومات عامة عن التخصص:</label
+            >
+            <textarea
+              class="form-control"
+              id="specializationInfo"
+              rows="5"
+              placeholder="أدخل تفاصيل حول تخصص الإلكترونيات والتصنيع..."
+            ></textarea>
           </div>
 
-          <div class="row mb-3">
-            <div class="col-lg-8 mt-lg-0">
-              <form
-                action="forms/contact.php"
-                method="post"
-                role="form"
-                class="php-email-form"
-              >
-                <div class="form-group mt-3">
-                  <div class="text-start mb-3">
-                    <button type="reset" class="btn btn-danger">
-                      مسح كل المحتوي
-                      <i class="bi bi-trash"></i>
-                    </button>
-                    <button
-                      type="button"
-                      class="btn btn-info ms-2"
-                      id="save-current-btn"
-                    >
-                      حفظ النتيجة الحالية
-                      <i class="bi bi-bookmark-plus"></i>
-                    </button>
-                  </div>
-                  <textarea
-                    class="form-control"
-                    name="message"
-                    rows="5"
-                    placeholder="أدخل معلومات عامة عن التخصص هنا..."
-                    required
-                  ></textarea>
-                </div>
-                <div class="my-3 text-center">
-                  <div class="row">
-                    <div class="col-6">
-                      <button type="submit" class="btn btn-primary">
-                        توليد باستخدام DEEPSEEK
-                        <span class="loader"></span>
-                      </button>
-                    </div>
-                    <div class="col-6">
-                      <button
-                        type="submit"
-                        class="btn btn-secondary text-white"
-                      >
-                        توليد باستخدام GEMINI <span class="loader"></span>
-                      </button>
-                    </div>
-                  </div>
-                </div>
-                <div class="my-3">
-                  <div class="alert alert-danger error-message">حدث خطاء</div>
-                  <div class="alert alert-success sent-message">
-                    تم الارسال انتظر الرد
-                  </div>
-                </div>
-                <!-- New Buttons for Job Analysis and Activities -->
-                <div class="my-3 text-center">
-                  <div class="row">
-                    <div class="col-md-6 mb-2 mb-md-0">
-                      <button type="button" class="btn btn-info w-100" id="generate-job-analysis-btn">
-                        <i class="bi bi-briefcase"></i> توليد تحليل الوظائف (Gemini)
-                        <span class="loader"></span> 
-                      </button>
-                    </div>
-                    <div class="col-md-6">
-                      <button type="button" class="btn btn-success w-100" id="generate-activities-btn">
-                        <i class="bi bi-lightning-charge"></i> توليد الأنشطة المقترحة (Gemini)
-                        <span class="loader"></span>
-                      </button>
-                    </div>
-                  </div>
-                </div>
-                <!-- End New Buttons -->
-              </form>
-            </div>
+          <button
+            type="button"
+            class="btn btn-primary mt-2 mb-3"
+            id="generateJobDescriptionBtn"
+          >
+            <i class="bi bi-robot"></i> توليد وصف الوظيفة باستخدام GEMINI
+            <span class="loader" style="display: none"></span>
+          </button>
+
+          <div class="mb-3">
+            <label for="jobDescriptionOutput" class="form-label"
+              >وصف الوظيفة:</label
+            >
+            <textarea
+              class="form-control"
+              id="jobDescriptionOutput"
+              rows="8"
+              placeholder="سيظهر هنا وصف الوظيفة المُنشأ أو يمكنك إدخال وصفك الخاص..."
+            ></textarea>
           </div>
 
-          <!-- Current Output Section -->
-          <div class="current-output">
-            <h3 class="mb-3">
-              <i class="bi bi-lightning-charge"></i>
-              النتائج الحالية
-            </h3>
-            <div class="row">
-              <div class="col-md-6 col-12">
-                <h4>
-                  وصف المهنة من DEEPSEEK:
-                  <span class="status-indicator" id="deepseek-status"></span>
-                </h4>
-                <div class="output">
-                  <p
-                    id="deepseek-response"
-                    class="min-vh-25 p-2 border rounded-2 shadow-sm"
-                  ></p>
-                </div>
-              </div>
-              <div class="col-md-6 col-12">
-                <h4>
-                  وصف المهنة من GEMINI:
-                  <span class="status-indicator" id="gemini-status"></span>
-                </h4>
-                <div class="output">
-                  <p
-                    id="gemini-response"
-                    class="min-vh-25 p-2 border rounded-2 shadow-sm"
-                  >
-                    Text Write Here
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- History Section -->
-          <div class="history-section">
-            <div class="history-header">
-              <h3 class="mb-0">
-                <i class="bi bi-clock-history"></i>
-                سجل الطلبات والاستجابات
-              </h3>
-              <div class="history-stats">
-                <span
-                  ><i class="bi bi-list-ul"></i> العدد:
-                  <span id="history-count">0</span></span
-                >
-                <span
-                  ><i class="bi bi-calendar-event"></i> آخر تحديث:
-                  <span id="last-update">-</span></span
-                >
-              </div>
-            </div>
-
-            <!-- Search and Filter -->
-            <div class="search-box">
+          <div class="my-3">
+            <p class="mb-2">اختر وصف الوظيفة للمتابعة:</p>
+            <div class="form-check">
               <input
-                type="text"
-                id="history-search"
-                placeholder="البحث في السجل..."
-                class="form-control"
+                class="form-check-input"
+                type="radio"
+                name="descriptionChoice"
+                id="choiceGemini"
+                value="gemini"
+                checked
               />
-              <i class="bi bi-search"></i>
+              <label class="form-check-label" for="choiceGemini">
+                استخدام الوصف المُنشأ بواسطة GEMINI
+              </label>
             </div>
+            <div class="form-check">
+              <input
+                class="form-check-input"
+                type="radio"
+                name="descriptionChoice"
+                id="choiceUser"
+                value="user"
+              />
+              <label class="form-check-label" for="choiceUser">
+                استخدام وصفي الخاص (المُدخل أعلاه)
+              </label>
+            </div>
+          </div>
 
-            <!-- History Controls -->
-            <div class="d-flex justify-content-between align-items-center mb-3">
-              <div class="btn-group" role="group">
-                <button
-                  type="button"
-                  class="btn btn-outline-primary btn-sm"
-                  id="sort-newest"
-                >
-                  الأحدث أولاً
-                </button>
-                <button
-                  type="button"
-                  class="btn btn-outline-primary btn-sm"
-                  id="sort-oldest"
-                >
-                  الأقدم أولاً
-                </button>
-              </div>
-              <div class="btn-group" role="group">
-                <button
-                  type="button"
-                  class="btn btn-outline-success btn-sm"
-                  id="export-json"
-                >
-                  تصدير JSON
-                </button>
-                <button
-                  type="button"
-                  class="btn btn-outline-info btn-sm"
-                  id="export-text"
-                >
-                  تصدير نص
-                </button>
-                <button
-                  type="button"
-                  class="btn btn-outline-danger btn-sm"
-                  id="clear-history"
-                >
-                  مسح السجل
-                </button>
-              </div>
-            </div>
-
-            <!-- History List -->
-            <div id="history-list">
-              <div class="no-history">
-                <i
-                  class="bi bi-inbox"
-                  style="font-size: 3em; color: #dee2e6"
-                ></i>
-                <p>لا توجد طلبات محفوظة بعد</p>
-                <small
-                  >ابدأ بإدخال معلومات التخصص وتوليد الوصف لإنشاء أول عنصر في
-                  السجل</small
-                >
-              </div>
-            </div>
+          <div class="d-flex justify-content-end mt-4">
+            <button
+              type="button"
+              class="btn btn-info"
+              id="step1NextBtn"
+              onclick="showStep(2)"
+            >
+              التالي إلى الخطوة 2 <i class="bi bi-arrow-left-circle-fill"></i>
+            </button>
           </div>
         </div>
-      </section>
-      <!-- ======= End Form Section ======= -->
-
-      <!-- ======= Job Analysis Section ======= -->
-      <section id="job-analysis" class="job-analysis">
-        <div class="container" data-aos="fade-up">
-          <div class="section-title">
-            <h2>ثانياً: تحليل الوظائف</h2>
-            <p>قائمة بالوظائف المقترحة بناءً على وصف التخصص:</p>
-          </div>
-
-          <div class="row">
-            <!-- Job Card 1 -->
-            <div id="job-card-1" class="col-lg-4 col-md-6 mb-4">
-              <div class="card h-100 job-analysis-card">
-                <div class="card-body">
-                  <h5 id="job-title-1" class="card-title">عنوان الوظيفة 1</h5>
-                  <p id="job-desc-1" class="card-text">وصف موجز للوظيفة 1 يوضح طبيعتها والمهام الرئيسية. هذا النص هو مثال مؤقت.</p>
-                </div>
-              </div>
-            </div>
-            <!-- Job Card 2 -->
-            <div id="job-card-2" class="col-lg-4 col-md-6 mb-4">
-              <div class="card h-100 job-analysis-card">
-                <div class="card-body">
-                  <h5 id="job-title-2" class="card-title">عنوان الوظيفة 2</h5>
-                  <p id="job-desc-2" class="card-text">وصف موجز للوظيفة 2 يوضح طبيعتها والمهام الرئيسية. هذا النص هو مثال مؤقت.</p>
-                </div>
-              </div>
-            </div>
-            <!-- Job Card 3 -->
-            <div id="job-card-3" class="col-lg-4 col-md-6 mb-4">
-              <div class="card h-100 job-analysis-card">
-                <div class="card-body">
-                  <h5 id="job-title-3" class="card-title">عنوان الوظيفة 3</h5>
-                  <p id="job-desc-3" class="card-text">وصف موجز للوظيفة 3 يوضح طبيعتها والمهام الرئيسية. هذا النص هو مثال مؤقت.</p>
-                </div>
-              </div>
-            </div>
-            <!-- Job Card 4 -->
-            <div id="job-card-4" class="col-lg-4 col-md-6 mb-4">
-              <div class="card h-100 job-analysis-card">
-                <div class="card-body">
-                  <h5 id="job-title-4" class="card-title">عنوان الوظيفة 4</h5>
-                  <p id="job-desc-4" class="card-text">وصف موجز للوظيفة 4 يوضح طبيعتها والمهام الرئيسية. هذا النص هو مثال مؤقت.</p>
-                </div>
-              </div>
-            </div>
-            <!-- Job Card 5 -->
-            <div id="job-card-5" class="col-lg-4 col-md-6 mb-4">
-              <div class="card h-100 job-analysis-card">
-                <div class="card-body">
-                  <h5 id="job-title-5" class="card-title">عنوان الوظيفة 5</h5>
-                  <p id="job-desc-5" class="card-text">وصف موجز للوظيفة 5 يوضح طبيعتها والمهام الرئيسية. هذا النص هو مثال مؤقت.</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-      <!-- ======= End Job Analysis Section ======= -->
-
-      <!-- ======= Activities Section ======= -->
-      <section id="activities" class="activities">
-        <div class="container" data-aos="fade-up">
-          <div class="section-title">
-            <h2>ثالثاً: الأنشطة</h2>
-            <p>قائمة بالأنشطة المقترحة ذات الصلة بالوظائف المحددة:</p>
-          </div>
-
-          <div class="row">
-            <!-- Activity Card 1-18 with IDs -->
-            <div id="activity-card-1" class="col-lg-4 col-md-6 mb-4">
-              <div class="card h-100 activity-card">
-                <div class="card-body">
-                  <p id="activity-text-1" class="card-text">النشاط المقترح 1</p>
-                </div>
-              </div>
-            </div>
-            <div id="activity-card-2" class="col-lg-4 col-md-6 mb-4">
-              <div class="card h-100 activity-card">
-                <div class="card-body">
-                  <p id="activity-text-2" class="card-text">النشاط المقترح 2</p>
-                </div>
-              </div>
-            </div>
-            <div id="activity-card-3" class="col-lg-4 col-md-6 mb-4">
-              <div class="card h-100 activity-card">
-                <div class="card-body">
-                  <p id="activity-text-3" class="card-text">النشاط المقترح 3</p>
-                </div>
-              </div>
-            </div>
-            <div id="activity-card-4" class="col-lg-4 col-md-6 mb-4">
-              <div class="card h-100 activity-card">
-                <div class="card-body">
-                  <p id="activity-text-4" class="card-text">النشاط المقترح 4</p>
-                </div>
-              </div>
-            </div>
-            <div id="activity-card-5" class="col-lg-4 col-md-6 mb-4">
-              <div class="card h-100 activity-card">
-                <div class="card-body">
-                  <p id="activity-text-5" class="card-text">النشاط المقترح 5</p>
-                </div>
-              </div>
-            </div>
-            <div id="activity-card-6" class="col-lg-4 col-md-6 mb-4">
-              <div class="card h-100 activity-card">
-                <div class="card-body">
-                  <p id="activity-text-6" class="card-text">النشاط المقترح 6</p>
-                </div>
-              </div>
-            </div>
-            <div id="activity-card-7" class="col-lg-4 col-md-6 mb-4">
-              <div class="card h-100 activity-card">
-                <div class="card-body">
-                  <p id="activity-text-7" class="card-text">النشاط المقترح 7</p>
-                </div>
-              </div>
-            </div>
-            <div id="activity-card-8" class="col-lg-4 col-md-6 mb-4">
-              <div class="card h-100 activity-card">
-                <div class="card-body">
-                  <p id="activity-text-8" class="card-text">النشاط المقترح 8</p>
-                </div>
-              </div>
-            </div>
-            <div id="activity-card-9" class="col-lg-4 col-md-6 mb-4">
-              <div class="card h-100 activity-card">
-                <div class="card-body">
-                  <p id="activity-text-9" class="card-text">النشاط المقترح 9</p>
-                </div>
-              </div>
-            </div>
-            <div id="activity-card-10" class="col-lg-4 col-md-6 mb-4">
-              <div class="card h-100 activity-card">
-                <div class="card-body">
-                  <p id="activity-text-10" class="card-text">النشاط المقترح 10</p>
-                </div>
-              </div>
-            </div>
-            <div id="activity-card-11" class="col-lg-4 col-md-6 mb-4">
-              <div class="card h-100 activity-card">
-                <div class="card-body">
-                  <p id="activity-text-11" class="card-text">النشاط المقترح 11</p>
-                </div>
-              </div>
-            </div>
-            <div id="activity-card-12" class="col-lg-4 col-md-6 mb-4">
-              <div class="card h-100 activity-card">
-                <div class="card-body">
-                  <p id="activity-text-12" class="card-text">النشاط المقترح 12</p>
-                </div>
-              </div>
-            </div>
-            <div id="activity-card-13" class="col-lg-4 col-md-6 mb-4">
-              <div class="card h-100 activity-card">
-                <div class="card-body">
-                  <p id="activity-text-13" class="card-text">النشاط المقترح 13</p>
-                </div>
-              </div>
-            </div>
-            <div id="activity-card-14" class="col-lg-4 col-md-6 mb-4">
-              <div class="card h-100 activity-card">
-                <div class="card-body">
-                  <p id="activity-text-14" class="card-text">النشاط المقترح 14</p>
-                </div>
-              </div>
-            </div>
-            <div id="activity-card-15" class="col-lg-4 col-md-6 mb-4">
-              <div class="card h-100 activity-card">
-                <div class="card-body">
-                  <p id="activity-text-15" class="card-text">النشاط المقترح 15</p>
-                </div>
-              </div>
-            </div>
-            <div id="activity-card-16" class="col-lg-4 col-md-6 mb-4">
-              <div class="card h-100 activity-card">
-                <div class="card-body">
-                  <p id="activity-text-16" class="card-text">النشاط المقترح 16</p>
-                </div>
-              </div>
-            </div>
-            <div id="activity-card-17" class="col-lg-4 col-md-6 mb-4">
-              <div class="card h-100 activity-card">
-                <div class="card-body">
-                  <p id="activity-text-17" class="card-text">النشاط المقترح 17</p>
-                </div>
-              </div>
-            </div>
-            <div id="activity-card-18" class="col-lg-4 col-md-6 mb-4">
-              <div class="card h-100 activity-card">
-                <div class="card-body">
-                  <p id="activity-text-18" class="card-text">النشاط المقترح 18</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-      <!-- ======= End Activities Section ======= -->
-    </main>
-    <!-- End #main -->
-
-    <!-- ======= Footer ======= -->
-    <footer id="footer">
-      <div class="container">
-        <div class="copyright">
-          &copy; Copyright <strong><span>AT</span></strong
-          >. All Rights Reserved
-        </div>
-        <div class="credits">Designed by ######</div>
-
-        <hr>
-        <!-- Gemini API Key Configuration -->
-        <div class="api-key-config mt-3">
-          <div class="row justify-content-center">
-            <div class="col-md-6">
-              <label for="gemini-api-key-input" class="form-label"
-                >مفتاح Gemini API:</label
-              >
-              <div class="input-group mb-2">
-                <input
-                  type="password"
-                  class="form-control form-control-sm"
-                  id="gemini-api-key-input"
-                  placeholder="أدخل مفتاح Gemini API الخاص بك هنا"
-                />
-                <button
-                  class="btn btn-outline-secondary btn-sm"
-                  type="button"
-                  id="toggle-gemini-api-key-visibility"
-                >
-                  <i class="bi bi-eye"></i>
-                </button>
-              </div>
-              <div
-                class="d-flex justify-content-start align-items-center"
-              >
-                <button
-                  type="button"
-                  class="btn btn-primary btn-sm me-2"
-                  id="save-gemini-api-key-btn"
-                >
-                  <i class="bi bi-save"></i> حفظ المفتاح
-                </button>
-                <button
-                  type="button"
-                  class="btn btn-danger btn-sm me-2"
-                  id="clear-gemini-api-key-btn"
-                >
-                  <i class="bi bi-trash"></i> مسح المفتاح
-                </button>
-                <small id="gemini-api-key-status" class="text-muted"></small>
-              </div>
-            </div>
-          </div>
-        </div>
-        <!-- End Gemini API Key Configuration -->
       </div>
-    </footer>
-    <!-- End Footer -->
 
-    <div id="preloader"></div>
-    <a
-      href="#"
-      class="back-to-top d-flex align-items-center justify-content-center"
-      ><i class="bi bi-arrow-up-short"></i
-    ></a>
+      <!-- Step 2: Main Activities -->
+      <div
+        id="step2"
+        class="step-section card shadow-sm mb-4"
+        style="display: none"
+      >
+        <div class="card-header bg-success text-white">
+          <h2 class="h5 mb-0">
+            <i class="bi bi-list-check"></i> الخطوة 2: الأنشطة الرئيسية
+          </h2>
+        </div>
+        <div class="card-body">
+          <div class="mb-3">
+            <label class="form-label">وصف الوظيفة المعتمد (من الخطوة 1):</label>
+            <textarea
+              class="form-control"
+              id="jobDescriptionDisplayStep2"
+              rows="6"
+              readonly
+              placeholder="سيتم عرض وصف الوظيفة المختار هنا..."
+            ></textarea>
+          </div>
 
-    <!-- Vendor JS Files -->
-    <script src="assets/vendor/purecounter/purecounter_vanilla.js"></script>
-    <script src="assets/vendor/aos/aos.js"></script>
+          <button
+            type="button"
+            class="btn btn-primary mt-2 mb-3"
+            id="generateActivitiesBtn"
+          >
+            <i class="bi bi-robot"></i> توليد الأنشطة الرئيسية باستخدام GEMINI
+            <span class="loader" style="display: none"></span>
+          </button>
+
+          <div class="mb-3">
+            <label class="form-label">الأنشطة الرئيسية المقترحة:</label>
+            <div
+              id="activitiesListContainer"
+              class="list-group"
+              style="
+                max-height: 300px;
+                overflow-y: auto;
+                border: 1px solid #ced4da;
+                border-radius: 0.25rem;
+                padding: 10px;
+              "
+            >
+              <!-- Activities will be dynamically populated here as checkboxes -->
+              <p class="text-muted">
+                سيتم عرض الأنشطة المقترحة هنا كقائمة اختيار.
+              </p>
+            </div>
+          </div>
+
+          <div class="input-group mt-3 mb-3">
+            <input
+              type="text"
+              class="form-control"
+              id="customActivityInput"
+              placeholder="إضافة نشاط مخصص..."
+            />
+            <button
+              class="btn btn-outline-secondary"
+              type="button"
+              id="addCustomActivityBtn"
+            >
+              <i class="bi bi-plus-circle"></i> إضافة نشاط
+            </button>
+          </div>
+
+          <div class="d-flex justify-content-between mt-4">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              id="step2PrevBtn"
+              onclick="showStep(1)"
+            >
+              <i class="bi bi-arrow-right-circle-fill"></i> السابق إلى الخطوة 1
+            </button>
+            <button
+              type="button"
+              class="btn btn-success"
+              id="step2NextBtn"
+              onclick="showStep(3)"
+            >
+              التالي إلى الخطوة 3 <i class="bi bi-arrow-left-circle-fill"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 3: Barriers & Skills -->
+      <div
+        id="step3"
+        class="step-section card shadow-sm mb-4"
+        style="display: none"
+      >
+        <div class="card-header bg-warning text-dark">
+          <h2 class="h5 mb-0">
+            <i class="bi bi-tools"></i> الخطوة 3: العوائق والمهارات
+          </h2>
+        </div>
+        <div class="card-body">
+          <!-- Content for step 3 will go here -->
+          <p>محتوى الخطوة الثالثة الخاص بتحديد العوائق والمهارات المطلوبة.</p>
+          <button class="btn btn-secondary" onclick="showStep(2)">
+            <i class="bi bi-arrow-right-circle"></i> السابق
+          </button>
+          <button class="btn btn-warning float-end" onclick="showStep(4)">
+            التالي <i class="bi bi-arrow-left-circle"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Step 4: Compile Framework -->
+      <div
+        id="step4"
+        class="step-section card shadow-sm mb-4"
+        style="display: none"
+      >
+        <div class="card-header bg-info text-white">
+          <h2 class="h5 mb-0">
+            <i class="bi bi-file-earmark-text"></i> الخطوة 4: تجميع الإطار
+          </h2>
+        </div>
+        <div class="card-body">
+          <!-- Content for step 4 will go here -->
+          <p>محتوى الخطوة الرابعة الخاص بتجميع إطار المنهج النهائي.</p>
+          <button class="btn btn-secondary" onclick="showStep(3)">
+            <i class="bi bi-arrow-right-circle"></i> السابق
+          </button>
+          <button
+            class="btn btn-info float-end"
+            onclick="alert('Framework Compilation Complete!')"
+          >
+            تجميع <i class="bi bi-check-circle"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bootstrap JS Bundle -->
     <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <script src="assets/vendor/glightbox/js/glightbox.min.js"></script>
-    <script src="assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
-    <script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
-    <script src="assets/vendor/php-email-form/validate.js"></script>
-
-    <!-- Main JS File -->
+    <!-- Main -->
     <script src="assets/js/main.js"></script>
-    <script src="assets/js/api.js"></script>
   </body>
 </html>
