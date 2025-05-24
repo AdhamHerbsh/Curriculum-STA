@@ -1,0 +1,50 @@
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: #f8f9fa; /* Light gray background for the page */
+}
+
+.container {
+  margin-top: 20px;
+  max-width: 960px; /* Max width for better readability on large screens */
+}
+
+header h1 {
+    color: #0056b3; /* A nice blue for the main title */
+}
+
+.step-section {
+  padding: 20px;
+  margin-bottom: 20px;
+  /* Using Bootstrap's card and shadow-sm for initial styling, can be customized further */
+}
+
+.step-section .card-header {
+    font-weight: bold;
+}
+
+/* Add some spacing for buttons within card bodies if needed */
+.step-section .card-body .btn {
+  margin-right: 5px; /* Spacing between buttons if they are next to each other */
+}
+
+/* Ensure loaders within new buttons are styled if not globally handled by .loader */
+.step-section .btn .loader {
+  border: 3px solid #f3f3f3;
+  border-top: 3px solid #0d6efd; /* Match primary button color or specific button color */
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  animation: spin 1s linear infinite;
+  display: inline-block;
+  margin-left: 10px;
+  vertical-align: middle;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
