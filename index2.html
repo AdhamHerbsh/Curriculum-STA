@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Industrial Electronics Curriculum Analysis - AI Powered</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            min-height: 100vh;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: 24px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #1e3c72, #2a5298, #3b82f6);
+            color: white;
+            padding: 40px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="white" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="white" opacity="0.1"/><circle cx="50" cy="10" r="0.5" fill="white" opacity="0.1"/><circle cx="10" cy="60" r="0.5" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+        }
+        
+        .header-content {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .header h1 {
+            margin-bottom: 15px;
+            font-size: 3em;
+            font-weight: 800;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
+            letter-spacing: -1px;
+        }
+        
+        .header .subtitle {
+            font-size: 1.3em;
+            opacity: 0.95;
+            font-weight: 300;
+            margin-bottom: 10px;
+        }
+        
+        .header .description {
+            font-size: 1em;
+            opacity: 0.8;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 40px;
+            padding: 40px;
+        }
+        
+        .analysis-section {
+            background: white;
+            border-radius: 20px;
+            padding: 35px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        .chat-section {
+            background: linear-gradient(145deg, #f8fafc, #ffffff);
+            border-radius: 20px;
+            padding: 35px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            position: sticky;
+            top: 20px;
+            height: fit-content;
+        }
+        
+        .section-title {
+            color: #1e293b;
+            margin-bottom: 25px;
+            font-size: 2em;
+            font-weight: 700;
+            border-bottom: 4px solid;
+            border-image: linear-gradient(90deg, #3b82f6, #8b5cf6) 1;
+            padding-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .curriculum-overview {
+            background: linear-gradient(135deg, #e0f2fe, #f3e5f5);
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            border-left: 5px solid #3b82f6;
+        }
+        
+        .curriculum-title {
+            font-size: 1.4em;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 15px;
+        }
+        
+        .curriculum-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .detail-item {
+            background: rgba(255, 255, 255, 0.7);
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 0.9em;
+            color: #475569;
+        }
+        
+        .detail-label {
+            font-weight: 600;
+            color: #1e293b;
+        }
+        
+        .jobs-container {
+            margin-bottom: 35px;
+        }
+        
+        .job-card {
+            background: linear-gradient(135deg, #ffffff, #f8fafc);
+            margin-bottom: 20px;
+            padding: 25px;
+            border-radius: 15px;
+            border-left: 5px solid #3b82f6;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .job-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 15px 35px rgba(59, 130, 246, 0.15);
+            border-left-color: #8b5cf6;
+        }
+        
+        .job-title {
+            font-weight: 700;
+            font-size: 1.2em;
+            color: #1e293b;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .job-desc {
+            color: #64748b;
+            margin-bottom: 12px;
+            line-height: 1.6;
+        }
+        
+        .job-skills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        
+        .skill-tag {
+            background: linear-gradient(135deg, #dbeafe, #e0e7ff);
+            color: #3730a3;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: 500;
+        }
+        
+        .activities-container {
+            margin-bottom: 35px;
+        }
+        
+        .activities-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 18px;
+            margin-bottom: 25px;
+        }
+        
+        .activity-item {
+            background: linear-gradient(135deg, #f1f5f9, #ffffff);
+            padding: 18px;
+            border-radius: 12px;
+            border-left: 4px solid #ef4444;
+            font-size: 0.95em;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .activity-item:hover {
+            background: linear-gradient(135deg, #dbeafe, #f0f9ff);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.1);
+        }
+        
+        .activity-icon {
+            font-size: 1.2em;
+            width: 30px;
+            text-align: center;
+        }
+        
+        .gemini-header {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .gemini-header::before {
+            content: '✨';
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 2em;
+            opacity: 0.3;
+            animation: sparkle 2s infinite;
+        }
+        
+        @keyframes sparkle {
+            0%, 100% { transform: scale(1) rotate(0deg); }
+            50% { transform: scale(1.2) rotate(180deg); }
+        }
+        
+        .chat-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        label {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #1e293b;
+            font-size: 0.95em;
+        }
+        
+        input, textarea, select {
+            padding: 15px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            background: white;
+            font-family: inherit;
+        }
+        
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+            background: #fefefe;
+        }
+        
+        textarea {
+            resize: vertical;
+            min-height: 140px;
+            line-height: 1.6;
+        }
+        
+        .context-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .context-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px;
+            background: #f8fafc;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        
+        .context-checkbox:hover {
+            background: #e2e8f0;
+        }
+        
+        .context-checkbox input[type="checkbox"] {
+            margin: 0;
+            padding: 0;
+            width: auto;
+        }
+        
+        .submit-btn {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8, #7c3aed);
+            color: white;
+            border: none;
+            padding: 18px 35px;
+            border-radius: 12px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .submit-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+        
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(59, 130, 246, 0.4);
+        }
+        
+        .submit-btn:hover::before {
+            left: 100%;
+        }
+        
+        .submit-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .response-area {
+            margin-top: 25px;
+            padding: 25px;
+            background: linear-gradient(135deg, #f8fafc, #ffffff);
+            border-radius: 15px;
+            border: 1px solid #e2e8f0;
+            display: none;
+        }
+        
+        .response-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            color: #1e293b;
+            font-weight: 600;
+        }
+        
+        .gemini-response {
+            white-space: pre-wrap;
+            line-height: 1.7;
+            color: #374151;
+            font-size: 0.95em;
+        }
+        
+        .loading {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #3b82f6;
+        }
+        
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #e2e8f0;
+            border-top: 2px solid #3b82f6;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .prompt-preview {
+            background: #f1f5f9;
+            border: 1px solid #cbd5e1;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 15px;
+            display: none;
+        }
+        
+        .prompt-preview h4 {
+            color: #1e293b;
+            margin-bottom: 10px;
+            font-size: 0.9em;
+        }
+        
+        .prompt-content {
+            font-family: 'Courier New', monospace;
+            font-size: 0.8em;
+            color: #475569;
+            max-height: 200px;
+            overflow-y: auto;
+            background: white;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        
+        @media (max-width: 1024px) {
+            .main-content {
+                grid-template-columns: 1fr;
+                gap: 30px;
+                padding: 30px;
+            }
+            
+            .chat-section {
+                position: static;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.2em;
+            }
+            
+            .activities-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .context-options {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-content">
+                <h1>🔌 Industrial Electronics Curriculum Analysis</h1>
+                <p class="subtitle">Egyptian Technical Secondary Schools - Advanced AI Analysis</p>
+                <p class="description">Comprehensive curriculum analysis with AI-powered insights for career guidance and educational planning</p>
+            </div>
+        </div>
+        
+        <div class="main-content">
+            <div class="analysis-section">
+                <div class="curriculum-overview">
+                    <div class="curriculum-title">📚 Curriculum Overview</div>
+                    <div class="curriculum-details">
+                        <div class="detail-item">
+                            <div class="detail-label">System:</div>
+                            3-Year Technical Secondary
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Country:</div>
+                            Egypt (Ministry of Education)
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Year:</div>
+                            2022 Framework
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Level:</div>
+                            Third Year (Advanced)
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Focus:</div>
+                            Industrial Electronics
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Type:</div>
+                            Practical & Theoretical
+                        </div>
+                    </div>
+                </div>
+                
+                <h2 class="section-title">🎯 Part 1: Career Opportunities</h2>
+                
+                <div class="jobs-container">
+                    <div class="job-card">
+                        <div class="job-title">⚡ Electronics Technician</div>
+                        <div class="job-desc">Maintains, troubleshoots, and repairs electronic equipment and systems in industrial settings. Works with circuit boards, testing equipment, and diagnostic tools.</div>
+                        <div class="job-skills">
+                            <span class="skill-tag">Circuit Analysis</span>
+                            <span class="skill-tag">Troubleshooting</span>
+                            <span class="skill-tag">Testing Equipment</span>
+                            <span class="skill-tag">Safety Standards</span>
+                        </div>
+                    </div>
+                    
+                    <div class="job-card">
+                        <div class="job-title">🤖 Industrial Automation Specialist</div>
+                        <div class="job-desc">Programs PLCs, designs control systems, and maintains automated industrial processes. Specializes in SCADA systems and industrial communication protocols.</div>
+                        <div class="job-skills">
+                            <span class="skill-tag">PLC Programming</span>
+                            <span class="skill-tag">SCADA</span>
+                            <span class="skill-tag">HMI Design</span>
+                            <span class="skill-tag">Industrial Networks</span>
+                        </div>
+                    </div>
+                    
+                    <div class="job-card">
+                        <div class="job-title">🔧 Circuit Design Engineer</div>
+                        <div class="job-desc">Designs electronic circuits, PCB layouts, and develops electronic prototypes. Works with CAD software and simulation tools for circuit optimization.</div>
+                        <div class="job-skills">
+                            <span class="skill-tag">PCB Design</span>
+                            <span class="skill-tag">CAD Software</span>
+                            <span class="skill-tag">Circuit Simulation</span>
+                            <span class="skill-tag">Component Selection</span>
+                        </div>
+                    </div>
+                    
+                    <div class="job-card">
+                        <div class="job-title">✅ Quality Control Inspector</div>
+                        <div class="job-desc">Tests electronic components for safety standards and quality assurance. Ensures compliance with international standards and regulations.</div>
+                        <div class="job-skills">
+                            <span class="skill-tag">Quality Standards</span>
+                            <span class="skill-tag">Testing Protocols</span>
+                            <span class="skill-tag">Documentation</span>
+                            <span class="skill-tag">Compliance</span>
+                        </div>
+                    </div>
+                    
+                    <div class="job-card">
+                        <div class="job-title">🔩 Maintenance Engineer</div>
+                        <div class="job-desc">Diagnoses and repairs complex industrial electronic systems and equipment. Plans preventive maintenance and manages spare parts inventory.</div>
+                        <div class="job-skills">
+                            <span class="skill-tag">Preventive Maintenance</span>
+                            <span class="skill-tag">System Diagnostics</span>
+                            <span class="skill-tag">Equipment Management</span>
+                            <span class="skill-tag">Technical Documentation</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <h2 class="section-title">⚡ Part 2: Curriculum Activities (20+)</h2>
+                
+                <div class="activities-container">
+                    <div class="activities-grid">
+                        <div class="activity-item">
+                            <span class="activity-icon">🔌</span>
+                            <span>Circuit Analysis & Design</span>
+                        </div>
+                        <div class="activity-item">
+                            <span class="activity-icon">⚙️</span>
+                            <span>PLC Programming & Control</span>
+                        </div>
+                        <div class="activity-item">
+                            <span class="activity-icon">🛡️</span>
+                            <span>Safety Standards Implementation</span>
+                        </div>
+                        <div class="activity-item">
+                            <span class="activity-icon">🔬</span>
+                            <span>Electronic Component Testing</span>
+                        </div>
+                        <div class="activity-item">
+                            <span class="activity-icon">📟</span>
+                            <span>PCB Design & Manufacturing</span>
+                        </div>
+                        <div class="activity-item">
+                            <span class="activity-icon">🤖</span>
+                            <span>Industrial Automation Systems</span>
+                        </div>
+                        <div class="activity-item">
+                            <span class="activity-icon">💻</span>
+                            <span>Microcontroller Programming</span>
+                        </div>
+                        <div class="activity-item">
+                            <span class="activity-icon">⚡</span>
+                            <span>Power Electronics & Conversion</span>
+                        </div>
+                        <div class="activity-item">
+                            <span class="activity-icon">📊</span>
+                            <span>Signal Processing & Analysis</span>
+                        </div>
+                        <div class="activity-item">
+                            <span class="activity-icon">🎛️</span>
+                            <span>Control Systems Design</span>
+                        </div>
+                        <div class="activity-item">
+                            <span class="activity-icon">🔍</span>
+                            <span>Electronic Troubleshooting</span>
+                        </div>
+                        <div class="activity-item">
+                            <span class="activity-icon">💾</span>
+                            <span>Digital Electronics & Logic</span>
+                        </div>
+                        <div class="activity-item">
+                            <span class="activity-icon">📈</span>
+                            <span>Analog Electronics & Amplifiers</span>
+                        </div>
+                        <div class="activity-item">
+                            <span class="activity-icon">🌡️</span>
+                            <span>Sensor Integration & Calibration</span>
+                        </div>
+                        <div class="activity-item">
+                            <span class="activity-icon">🔄</span>
+                            <span>Motor Control Systems</span>
+                        </div>
+                        <div class="activity-item">
+                            <span class="activity-icon">📡</span>
+                            <span>Communication Protocols</span>
+                        </div>
+                        <div class="activity-item">
+                            <span class="activity-icon">🖥️</span>
+                            <span>Embedded Systems Development</span>
+                        </div>
+                        <div class="activity-item">
+                            <span class="activity-icon">🌐</span>
+                            <span>Industrial Networking</span>
+                        </div>
+                        <div class="activity-item">
+                            <span class="activity-icon">📋</span>
+                            <span>Technical Documentation</span>
+                        </div>
+                        <div class="activity-item">
+                            <span class="activity-icon">🏭</span>
+                            <span>Manufacturing Processes</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="chat-section">
+                <div class="gemini-header">
+                    <h2 style="margin:0; font-size: 1.5em;">🤖 AI-Powered Analysis</h2>
+                    <p style="margin: 10px 0 0 0; opacity: 0.9;">Get detailed insights with Gemini AI</p>
+                </div>
+                
+                <form class="chat-form" id="geminiForm">
+                    <div class="form-group">
+                        <label for="apiKey">🔑 Gemini API Key:</label>
+                        <input type="password" id="apiKey" name="apiKey" placeholder="Enter your Gemini API key (from Google AI Studio)" required>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="queryType">🎯 Analysis Type:</label>
+                            <select id="queryType" name="queryType">
+                                <option value="comprehensive">Comprehensive Analysis</option>
+                                <option value="job_analysis">Job Market Analysis</option>
+                                <option value="curriculum_review">Curriculum Review</option>
+                                <option value="skill_gap">Skills Gap Analysis</option>
+                                <option value="career_guidance">Career Guidance</option>
+                                <option value="industry_trends">Industry Trends</option>
+                                <option value="salary_prospects">Salary Prospects</option>
+                                <option value="education_path">Education Pathway</option>
+                                <option value="certification">Certification Requirements</option>
+                                <option value="other">Custom Analysis</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="targetAudience">👥 Target Audience:</label>
+                            <select id="targetAudience" name="targetAudience">
+                                <option value="student">Current Student</option>
+                                <option value="graduate">Recent Graduate</option>
+                                <option value="career_changer">Career Changer</option>
+                                <option value="educator">Educator/Teacher</option>
+                                <option value="employer">Employer/HR</option>
+                                <option value="parent">Parent/Guardian</option>
+                                <option value="policy_maker">Policy Maker</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>📋 Include Context Areas:</label>
+                        <div class="context-options">
+                            <label class="context-checkbox">
+                                <input type="checkbox" name="context" value="curriculum_details" checked>
+                                <span>Detailed Curriculum Content</span>
+                            </label>
+                            <label class="context-checkbox">
+                                <input type="checkbox" name="context" value="egyptian_market" checked>
+                                <span>Egyptian Job Market</span>
+                            </label>
+                            <label class="context-checkbox">
+                                <input type="checkbox" name="context" value="salary_data" checked>
+                                <span>Salary Information</span>
+                            </label>
+                            <label class="context-checkbox">
+                                <input type="checkbox" name="context" value="industry_growth" checked>
+                                <span>Industry Growth Trends</span>
+                            </label>
+                            <label class="context-checkbox">
+                                <input type="checkbox" name="context" value="skills_demand" checked>
+                                <span>Skills in Demand</span>
+                            </label>
+                            <label class="context-checkbox">
+                                <input type="checkbox" name="context" value="career_progression" checked>
+                                <span>Career Progression Paths</span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="userQuery">💭 Your Specific Question:</label>
+                        <textarea id="userQuery" name="userQuery" placeholder="Ask detailed questions about the industrial electronics curriculum, job prospects, required skills, career advancement, salary expectations, or any related topic. Be specific for better AI responses..." required></textarea>
+                    </div>
+                    
+                    <button type="button" id="previewBtn" style="background: #6b7280; padding: 10px 20px; border: none; border-radius: 8px; color: white; cursor: pointer; margin-bottom: 10px;">
+                        👁️ Preview Prompt
+                    </button>
+                    
+                    <div class="prompt-preview" id="promptPreview">
+                        <h4>🔍 Generated Prompt Preview:</h4>
+                        <div class="prompt-content" id="promptContent"></div>
+                    </div>
+                    
+                    <button type="submit" class="submit-btn" id="submitBtn">
+                        🚀 Analyze with Gemini AI
+                    </button>
+                </form>
+                
+                <div class="response-area" id="responseArea">
+                    <div class="response-header">
+                        <span>🤖 Gemini AI Analysis:</span>
+                    </div>
+                    <div class="gemini-response" id="geminiResponse"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function generateDetailedPrompt() {
+            const queryType = document.getElementById('queryType').value;
+            const targetAudience = document.getElementById('targetAudience').value;
+            const userQuery = document.getElementById('userQuery').value;
+            const checkedContexts = Array.from(document.querySelectorAll('input[name="context"]:checked')).map(cb => cb.value);
+            
+            let contextPrompt = `
+# INDUSTRIAL ELECTRONICS CURRICULUM ANALYSIS REQUEST
+
+## DOCUMENT CONTEXT:
+You are analyzing the official Industrial Electronics curriculum for Egyptian Technical Secondary Schools (3-year system, 2022 framework, Level 3). This is from the Egyptian Ministry of Education and Technical Education.
+
+## CURRICULUM COMPREHENSIVE OVERVIEW:
+
+### CORE SUBJECT AREAS:
+1. **Safety & Health Standards in Electronics**
+   - Workplace safety protocols
