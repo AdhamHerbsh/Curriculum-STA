@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>AI API Handler Tests</title>
+    <!-- Not including style.css to keep tests focused on JS logic, unless specific UI styling is tested -->
+    <!-- <link rel="stylesheet" href="assets/css/style.css"> -->
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; margin: 0; background-color: #f4f4f4; color: #333; }
+        h1 { text-align: center; color: #444; }
+        #test-summary { margin-bottom: 20px; padding: 15px; background-color: #fff; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        #test-summary p { margin: 5px 0; }
+        #test-results { list-style-type: none; padding: 0; background-color: #fff; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        #test-results li { margin-bottom: 8px; padding: 10px 15px; border-bottom: 1px solid #eee; }
+        #test-results li:last-child { border-bottom: none; }
+        .pass { color: #28a745; }
+        .fail { color: #dc3545; font-weight: bold; }
+        .suite-title { font-weight: bold; margin-top: 15px; padding-bottom: 5px; border-bottom: 2px solid #007bff; color: #007bff;}
+        .mock-ui { display: none; } /* Keep mock UI hidden */
+    </style>
+</head>
+<body>
+    <h1>AI API Handler Test Results</h1>
+
+    <div id="test-summary">
+        <p><strong>Summary:</strong></p>
+        <p>Total Tests: <span id="total-tests">0</span></p>
+        <p class="pass">Passed: <span id="passed-tests">0</span></p>
+        <p class="fail">Failed: <span id="failed-tests">0</span></p>
+    </div>
+
+    <ul id="test-results"></ul>
+
+    <!-- Mock DOM Elements (subset of index.html for api.js logic) -->
+    <div class="mock-ui">
+        <textarea name="message"></textarea>
+        <div class="error-message" style="display: none;"></div>
+        <div class="sent-message" style="display: none;"></div>
+        <p id="deepseek-response"></p>
+        <p id="gemini-response"></p>
+        <input type="password" id="gemini-api-key-input">
+        <button id="save-gemini-api-key-btn">Save Key</button>
+        <button id="clear-gemini-api-key-btn">Clear Key</button>
+        <small id="gemini-api-key-status"></small>
+        <button id="toggle-gemini-api-key-visibility"><i></i></button>
+
+        <button class="btn-primary" id="mock-deepseek-btn"><span class="loader"></span></button>
+        <button class="btn-secondary" id="mock-gemini-btn"><span class="loader"></span></button>
+        <button id="generate-job-analysis-btn"><span class="loader"></span></button>
+        <button id="generate-activities-btn"><span class="loader"></span></button>
+        
+        <div id="job-analysis"> <!-- Section wrapper -->
+            <div id="job-card-1" class="job-analysis-card"><h5 id="job-title-1" class="card-title">Job Title 1</h5><p id="job-desc-1" class="card-text">Desc 1</p></div>
+            <div id="job-card-2" class="job-analysis-card"><h5 id="job-title-2" class="card-title">Job Title 2</h5><p id="job-desc-2" class="card-text">Desc 2</p></div>
+            <div id="job-card-3" class="job-analysis-card"><h5 id="job-title-3" class="card-title">Job Title 3</h5><p id="job-desc-3" class="card-text">Desc 3</p></div>
+            <div id="job-card-4" class="job-analysis-card"><h5 id="job-title-4" class="card-title">Job Title 4</h5><p id="job-desc-4" class="card-text">Desc 4</p></div>
+            <div id="job-card-5" class="job-analysis-card"><h5 id="job-title-5" class="card-title">Job Title 5</h5><p id="job-desc-5" class="card-text">Desc 5</p></div>
+        </div>
+        <div id="activities"> <!-- Section wrapper -->
+            <!-- Create 18 activity card mocks -->
+            <script>
+                const activitiesSection = document.getElementById('activities');
+                for (let i = 1; i <= 18; i++) {
+                    const card = document.createElement('div');
+                    card.id = `activity-card-${i}`;
+                    card.classList.add('activity-card');
+                    const p = document.createElement('p');
+                    p.id = `activity-text-${i}`;
+                    p.classList.add('card-text');
+                    p.textContent = `Activity Text ${i}`;
+                    card.appendChild(p);
+                    activitiesSection.appendChild(card);
+                }
+            </script>
+        </div>
+         <form class="php-email-form">
+            <button type="reset"></button>
+         </form>
+    </div>
+
+    <script src="assets/js/api.js"></script>
+    <script src="assets/js/tests.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Manually assign buttons for AIAPIHandler if it doesn't find them by class alone in test
+            // This is because the mock buttons might not be the *only* ones with these classes
+            // if other UI elements were loaded.
+            if (window.aiHandler) {
+                 window.aiHandler.deepSeekButton = document.getElementById('mock-deepseek-btn');
+                 window.aiHandler.geminiButton = document.getElementById('mock-gemini-btn');
+            }
+            runAllTests(); // Defined in tests.js
+        });
+    </script>
+</body>
+</html>
