@@ -103,6 +103,24 @@
                     تم الارسال انتظر الرد
                   </div>
                 </div>
+                <!-- New Buttons for Job Analysis and Activities -->
+                <div class="my-3 text-center">
+                  <div class="row">
+                    <div class="col-md-6 mb-2 mb-md-0">
+                      <button type="button" class="btn btn-info w-100" id="generate-job-analysis-btn">
+                        <i class="bi bi-briefcase"></i> توليد تحليل الوظائف (Gemini)
+                        <span class="loader"></span> 
+                      </button>
+                    </div>
+                    <div class="col-md-6">
+                      <button type="button" class="btn btn-success w-100" id="generate-activities-btn">
+                        <i class="bi bi-lightning-charge"></i> توليد الأنشطة المقترحة (Gemini)
+                        <span class="loader"></span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <!-- End New Buttons -->
               </form>
             </div>
           </div>
@@ -234,6 +252,206 @@
         </div>
       </section>
       <!-- ======= End Form Section ======= -->
+
+      <!-- ======= Job Analysis Section ======= -->
+      <section id="job-analysis" class="job-analysis">
+        <div class="container" data-aos="fade-up">
+          <div class="section-title">
+            <h2>ثانياً: تحليل الوظائف</h2>
+            <p>قائمة بالوظائف المقترحة بناءً على وصف التخصص:</p>
+          </div>
+
+          <div class="row">
+            <!-- Job Card 1 -->
+            <div id="job-card-1" class="col-lg-4 col-md-6 mb-4">
+              <div class="card h-100 job-analysis-card">
+                <div class="card-body">
+                  <h5 id="job-title-1" class="card-title">عنوان الوظيفة 1</h5>
+                  <p id="job-desc-1" class="card-text">وصف موجز للوظيفة 1 يوضح طبيعتها والمهام الرئيسية. هذا النص هو مثال مؤقت.</p>
+                </div>
+              </div>
+            </div>
+            <!-- Job Card 2 -->
+            <div id="job-card-2" class="col-lg-4 col-md-6 mb-4">
+              <div class="card h-100 job-analysis-card">
+                <div class="card-body">
+                  <h5 id="job-title-2" class="card-title">عنوان الوظيفة 2</h5>
+                  <p id="job-desc-2" class="card-text">وصف موجز للوظيفة 2 يوضح طبيعتها والمهام الرئيسية. هذا النص هو مثال مؤقت.</p>
+                </div>
+              </div>
+            </div>
+            <!-- Job Card 3 -->
+            <div id="job-card-3" class="col-lg-4 col-md-6 mb-4">
+              <div class="card h-100 job-analysis-card">
+                <div class="card-body">
+                  <h5 id="job-title-3" class="card-title">عنوان الوظيفة 3</h5>
+                  <p id="job-desc-3" class="card-text">وصف موجز للوظيفة 3 يوضح طبيعتها والمهام الرئيسية. هذا النص هو مثال مؤقت.</p>
+                </div>
+              </div>
+            </div>
+            <!-- Job Card 4 -->
+            <div id="job-card-4" class="col-lg-4 col-md-6 mb-4">
+              <div class="card h-100 job-analysis-card">
+                <div class="card-body">
+                  <h5 id="job-title-4" class="card-title">عنوان الوظيفة 4</h5>
+                  <p id="job-desc-4" class="card-text">وصف موجز للوظيفة 4 يوضح طبيعتها والمهام الرئيسية. هذا النص هو مثال مؤقت.</p>
+                </div>
+              </div>
+            </div>
+            <!-- Job Card 5 -->
+            <div id="job-card-5" class="col-lg-4 col-md-6 mb-4">
+              <div class="card h-100 job-analysis-card">
+                <div class="card-body">
+                  <h5 id="job-title-5" class="card-title">عنوان الوظيفة 5</h5>
+                  <p id="job-desc-5" class="card-text">وصف موجز للوظيفة 5 يوضح طبيعتها والمهام الرئيسية. هذا النص هو مثال مؤقت.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- ======= End Job Analysis Section ======= -->
+
+      <!-- ======= Activities Section ======= -->
+      <section id="activities" class="activities">
+        <div class="container" data-aos="fade-up">
+          <div class="section-title">
+            <h2>ثالثاً: الأنشطة</h2>
+            <p>قائمة بالأنشطة المقترحة ذات الصلة بالوظائف المحددة:</p>
+          </div>
+
+          <div class="row">
+            <!-- Activity Card 1-18 with IDs -->
+            <div id="activity-card-1" class="col-lg-4 col-md-6 mb-4">
+              <div class="card h-100 activity-card">
+                <div class="card-body">
+                  <p id="activity-text-1" class="card-text">النشاط المقترح 1</p>
+                </div>
+              </div>
+            </div>
+            <div id="activity-card-2" class="col-lg-4 col-md-6 mb-4">
+              <div class="card h-100 activity-card">
+                <div class="card-body">
+                  <p id="activity-text-2" class="card-text">النشاط المقترح 2</p>
+                </div>
+              </div>
+            </div>
+            <div id="activity-card-3" class="col-lg-4 col-md-6 mb-4">
+              <div class="card h-100 activity-card">
+                <div class="card-body">
+                  <p id="activity-text-3" class="card-text">النشاط المقترح 3</p>
+                </div>
+              </div>
+            </div>
+            <div id="activity-card-4" class="col-lg-4 col-md-6 mb-4">
+              <div class="card h-100 activity-card">
+                <div class="card-body">
+                  <p id="activity-text-4" class="card-text">النشاط المقترح 4</p>
+                </div>
+              </div>
+            </div>
+            <div id="activity-card-5" class="col-lg-4 col-md-6 mb-4">
+              <div class="card h-100 activity-card">
+                <div class="card-body">
+                  <p id="activity-text-5" class="card-text">النشاط المقترح 5</p>
+                </div>
+              </div>
+            </div>
+            <div id="activity-card-6" class="col-lg-4 col-md-6 mb-4">
+              <div class="card h-100 activity-card">
+                <div class="card-body">
+                  <p id="activity-text-6" class="card-text">النشاط المقترح 6</p>
+                </div>
+              </div>
+            </div>
+            <div id="activity-card-7" class="col-lg-4 col-md-6 mb-4">
+              <div class="card h-100 activity-card">
+                <div class="card-body">
+                  <p id="activity-text-7" class="card-text">النشاط المقترح 7</p>
+                </div>
+              </div>
+            </div>
+            <div id="activity-card-8" class="col-lg-4 col-md-6 mb-4">
+              <div class="card h-100 activity-card">
+                <div class="card-body">
+                  <p id="activity-text-8" class="card-text">النشاط المقترح 8</p>
+                </div>
+              </div>
+            </div>
+            <div id="activity-card-9" class="col-lg-4 col-md-6 mb-4">
+              <div class="card h-100 activity-card">
+                <div class="card-body">
+                  <p id="activity-text-9" class="card-text">النشاط المقترح 9</p>
+                </div>
+              </div>
+            </div>
+            <div id="activity-card-10" class="col-lg-4 col-md-6 mb-4">
+              <div class="card h-100 activity-card">
+                <div class="card-body">
+                  <p id="activity-text-10" class="card-text">النشاط المقترح 10</p>
+                </div>
+              </div>
+            </div>
+            <div id="activity-card-11" class="col-lg-4 col-md-6 mb-4">
+              <div class="card h-100 activity-card">
+                <div class="card-body">
+                  <p id="activity-text-11" class="card-text">النشاط المقترح 11</p>
+                </div>
+              </div>
+            </div>
+            <div id="activity-card-12" class="col-lg-4 col-md-6 mb-4">
+              <div class="card h-100 activity-card">
+                <div class="card-body">
+                  <p id="activity-text-12" class="card-text">النشاط المقترح 12</p>
+                </div>
+              </div>
+            </div>
+            <div id="activity-card-13" class="col-lg-4 col-md-6 mb-4">
+              <div class="card h-100 activity-card">
+                <div class="card-body">
+                  <p id="activity-text-13" class="card-text">النشاط المقترح 13</p>
+                </div>
+              </div>
+            </div>
+            <div id="activity-card-14" class="col-lg-4 col-md-6 mb-4">
+              <div class="card h-100 activity-card">
+                <div class="card-body">
+                  <p id="activity-text-14" class="card-text">النشاط المقترح 14</p>
+                </div>
+              </div>
+            </div>
+            <div id="activity-card-15" class="col-lg-4 col-md-6 mb-4">
+              <div class="card h-100 activity-card">
+                <div class="card-body">
+                  <p id="activity-text-15" class="card-text">النشاط المقترح 15</p>
+                </div>
+              </div>
+            </div>
+            <div id="activity-card-16" class="col-lg-4 col-md-6 mb-4">
+              <div class="card h-100 activity-card">
+                <div class="card-body">
+                  <p id="activity-text-16" class="card-text">النشاط المقترح 16</p>
+                </div>
+              </div>
+            </div>
+            <div id="activity-card-17" class="col-lg-4 col-md-6 mb-4">
+              <div class="card h-100 activity-card">
+                <div class="card-body">
+                  <p id="activity-text-17" class="card-text">النشاط المقترح 17</p>
+                </div>
+              </div>
+            </div>
+            <div id="activity-card-18" class="col-lg-4 col-md-6 mb-4">
+              <div class="card h-100 activity-card">
+                <div class="card-body">
+                  <p id="activity-text-18" class="card-text">النشاط المقترح 18</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- ======= End Activities Section ======= -->
     </main>
     <!-- End #main -->
 
@@ -245,6 +463,53 @@
           >. All Rights Reserved
         </div>
         <div class="credits">Designed by ######</div>
+
+        <hr>
+        <!-- Gemini API Key Configuration -->
+        <div class="api-key-config mt-3">
+          <div class="row justify-content-center">
+            <div class="col-md-6">
+              <label for="gemini-api-key-input" class="form-label"
+                >مفتاح Gemini API:</label
+              >
+              <div class="input-group mb-2">
+                <input
+                  type="password"
+                  class="form-control form-control-sm"
+                  id="gemini-api-key-input"
+                  placeholder="أدخل مفتاح Gemini API الخاص بك هنا"
+                />
+                <button
+                  class="btn btn-outline-secondary btn-sm"
+                  type="button"
+                  id="toggle-gemini-api-key-visibility"
+                >
+                  <i class="bi bi-eye"></i>
+                </button>
+              </div>
+              <div
+                class="d-flex justify-content-start align-items-center"
+              >
+                <button
+                  type="button"
+                  class="btn btn-primary btn-sm me-2"
+                  id="save-gemini-api-key-btn"
+                >
+                  <i class="bi bi-save"></i> حفظ المفتاح
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-danger btn-sm me-2"
+                  id="clear-gemini-api-key-btn"
+                >
+                  <i class="bi bi-trash"></i> مسح المفتاح
+                </button>
+                <small id="gemini-api-key-status" class="text-muted"></small>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- End Gemini API Key Configuration -->
       </div>
     </footer>
     <!-- End Footer -->
