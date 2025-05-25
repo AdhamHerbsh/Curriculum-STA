@@ -95,6 +95,14 @@ h6 {
   }
 }
 
+#competenciesContainer {
+  max-height: 600px; /* Or another value that suits the design */
+  overflow-y: auto;
+  padding: 10px; /* Optional: to provide some spacing if content touches the edges */
+  border: 1px solid #dee2e6; /* Optional: to visually contain the scrollable area */
+  border-radius: 0.25rem; /* Optional: consistent with other Bootstrap elements */
+}
+
 .content-loader {
   display: flex;
   justify-content: center;
