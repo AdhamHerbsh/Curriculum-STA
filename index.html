@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>AI-Powered Curriculum Framework Designer</title>
+    <title>مصمم إطار المناهج بالذكاء الاصطناعي</title>
 
     <!-- Bootstrap CSS -->
     <link
@@ -22,7 +22,7 @@
     <div class="container mt-5">
       <header class="text-center mb-4">
         <h1>
-          <i class="bi bi-magic"></i> AI-Powered Curriculum Framework Designer
+          <i class="bi bi-magic" aria-label="أيقونة سحرية"></i> مصمم إطار المناهج بالذكاء الاصطناعي
         </h1>
         <p class="lead">
           تصميم إطار عمل المناهج الدراسية بخطوات مدعومة بالذكاء الاصطناعي
@@ -62,12 +62,11 @@
             <label for="jobDescriptionOutput" class="form-label"
               >وصف الوظيفة:</label
             >
-            <textarea
+            <div
               class="form-control"
               id="jobDescriptionOutput"
-              rows="8"
-              placeholder="سيظهر هنا وصف الوظيفة المُنشأ أو يمكنك إدخال وصفك الخاص..."
-            ></textarea>
+              style="min-height: 150px; overflow-y: auto;"
+            ></div>
           </div>
 
           <div class="my-3">
@@ -243,7 +242,7 @@
           </button>
           <button
             class="btn btn-info float-end"
-            onclick="alert('Framework Compilation Complete!')"
+            onclick="alert('اكتمل تجميع الإطار!')"
           >
             تجميع <i class="bi bi-check-circle"></i>
           </button>
