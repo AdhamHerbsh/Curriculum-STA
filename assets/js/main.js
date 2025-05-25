@@ -9,18 +9,22 @@ let curriculumData = {
     generatedJobDescription: '',
     userJobDescription: '',
     selectedChoice: 'gemini',
-    finalJobDescription: ''
+    finalJobDescription: '',
+    lastJobDescriptionPrompt: null
   },
   step2: {
     generatedActivities: [],
     customActivities: [],
     selectedActivities: [],
-    allActivities: []
+    allActivities: [],
+    lastActivitiesPrompt: null // Added
   },
   step3: {
     competencies: [],
     skills: [],
-    knowledge: []
+    knowledge: [],
+    lastCompetenciesPrompt: null, // Added
+    lastSkillsKnowledgeAttempted: false // Added - will be set to true before attempting
   },
   step4: {
     finalFramework: {}
@@ -126,8 +130,11 @@ async function generateJobDescription() {
       اجعل الوصف مفصلاً وسهل القراءة للمستخدم العادي.
     `;
 
-    // Simulate API response (replace with actual GEMINI API call)
-    const mockResponse = await simulateGeminiResponse(prompt, 'job-description');
+    // Store the prompt
+    curriculumData.step1.lastJobDescriptionPrompt = prompt;
+
+    // Call actual Gemini API
+    const mockResponse = await callActualGeminiAPI(prompt, 'job-description');
     
     curriculumData.step1.specializationInfo = specializationInfo;
     curriculumData.step1.generatedJobDescription = mockResponse;
@@ -140,7 +147,12 @@ async function generateJobDescription() {
     
   } catch (error) {
     console.error('خطأ في توليد وصف الوظيفة:', error);
-    alert('حدث خطأ أثناء توليد وصف المهنة. يرجى المحاولة مرة أخرى.');
+    if (error && error.error === 'NO_API_KEY') {
+      alert(error.message);
+    } else {
+      alert('حدث خطأ أثناء توليد وصف المهنة. يرجى المحاولة مرة أخرى.');
+      showRetryButton('jobDescription'); // Show retry button on other errors
+    }
     hideLoader('generateJobDescriptionBtn');
   }
 }
@@ -202,8 +214,9 @@ async function generateMainActivities() {
       
       اكتب كل نشاط بشكل واضح ومحدد.
     `;
+    curriculumData.step2.lastActivitiesPrompt = prompt; // Store prompt
 
-    const response = await simulateGeminiResponse(prompt, 'activities');
+    const response = await callActualGeminiAPI(prompt, 'activities');
     const activities = formatAIResponse(response, 'activities');
     
     curriculumData.step2.generatedActivities = activities;
@@ -214,7 +227,12 @@ async function generateMainActivities() {
     
   } catch (error) {
     console.error('خطأ في توليد الأنشطة:', error);
-    alert('حدث خطأ أثناء توليد الأنشطة. يرجى المحاولة مرة أخرى.');
+    if (error && error.error === 'NO_API_KEY') {
+      alert(error.message);
+    } else {
+      alert('حدث خطأ أثناء توليد الأنشطة. يرجى المحاولة مرة أخرى.');
+      showRetryButton('activities'); // Show retry button
+    }
     hideLoader('generateActivitiesBtn');
   }
 }
@@ -349,11 +367,11 @@ function updateStep3Display() {
     </div>
     
     <div class="mb-3">
-      <button type="button" class="btn btn-primary" onclick="generateAllCompetencies()">
+      <button type="button" class="btn btn-primary" id="generateAllCompetenciesBtn" onclick="generateAllCompetencies()">
         <i class="bi bi-robot"></i> توليد جميع الجدارات باستخدام GEMINI
         <span class="loader" style="display: none"></span>
       </button>
-      <button type="button" class="btn btn-success ms-2" onclick="generateSkillsAndKnowledge()">
+      <button type="button" class="btn btn-success ms-2" id="generateSkillsAndKnowledgeBtn" onclick="generateSkillsAndKnowledge()">
         <i class="bi bi-gear"></i> توليد المهارات والمعارف
         <span class="loader" style="display: none"></span>
       </button>
@@ -401,8 +419,9 @@ async function generateAllCompetencies() {
       - جدارة 2
       - جدارة 3
     `;
+    curriculumData.step3.lastCompetenciesPrompt = prompt; // Store prompt
     
-    const response = await simulateGeminiResponse(prompt, 'competencies');
+    const response = await callActualGeminiAPI(prompt, 'competencies');
     parseAndStoreCompetencies(response);
     displayCompetencies();
     
@@ -410,7 +429,12 @@ async function generateAllCompetencies() {
     
   } catch (error) {
     console.error('خطأ في توليد الجدارات:', error);
-    alert('حدث خطأ أثناء توليد الجدارات. يرجى المحاولة مرة أخرى.');
+    if (error && error.error === 'NO_API_KEY') {
+      alert(error.message);
+    } else {
+      alert('حدث خطأ أثناء توليد الجدارات. يرجى المحاولة مرة أخرى.');
+      showRetryButton('competencies'); // Show retry button
+    }
     hideLoader('generateAllCompetencies');
   }
 }
@@ -517,10 +541,15 @@ async function generateSkillsAndKnowledge() {
   }
   
   showLoader('generateSkillsAndKnowledge');
+  curriculumData.step3.lastSkillsKnowledgeAttempted = true; // Mark that an attempt was made
   
   try {
     for (const activityComp of curriculumData.step3.competencies) {
       for (const competency of activityComp.competencies) {
+        // Clear previous skills/knowledge if any, to avoid duplication on retry
+        competency.skills = [];
+        competency.knowledge = [];
+
         const prompt = `
           للجدارة التالية: "${competency.text}"
           
@@ -538,17 +567,23 @@ async function generateSkillsAndKnowledge() {
           - معرفة 2
         `;
         
-        const response = await simulateGeminiResponse(prompt, 'skills-knowledge');
+        const response = await callActualGeminiAPI(prompt, 'skills-knowledge');
         parseSkillsAndKnowledge(response, competency);
       }
     }
     
     displayCompetencies(); // Refresh display with skills and knowledge
+    curriculumData.step3.lastSkillsKnowledgeAttempted = false; // Clear flag on full success
     hideLoader('generateSkillsAndKnowledge');
     
   } catch (error) {
     console.error('خطأ في توليد المهارات والمعارف:', error);
-    alert('حدث خطأ أثناء توليد المهارات والمعارف.');
+    if (error && error.error === 'NO_API_KEY') {
+      alert(error.message);
+    } else {
+      alert('حدث خطأ أثناء توليد المهارات والمعارف.');
+      showRetryButton('skillsKnowledge'); // Show retry button
+    }
     hideLoader('generateSkillsAndKnowledge');
   }
 }
@@ -856,111 +891,6 @@ function resetFramework() {
 }
 
 // ==================================================
-// GEMINI API SIMULATION (Replace with actual API calls)
-// ==================================================
-
-async function simulateGeminiResponse(prompt, type) {
-  // Simulate API delay
-  await new Promise(resolve => setTimeout(resolve, 2000));
-  
-  // Mock responses based on type
-  switch (type) {
-    case 'job-description':
-      return `
-وصف المهنة: أخصائي الإلكترونيات والتصنيع
-
-نظرة عامة:
-يقوم أخصائي الإلكترونيات والتصنيع بتصميم وتطوير وصيانة الأنظمة الإلكترونية والمعدات الصناعية. يجمع هذا التخصص بين المعرفة النظرية في الهندسة الإلكترونية والمهارات العملية في التصنيع والإنتاج.
-
-المسؤوليات الأساسية:
-• تصميم وتطوير الدوائر الإلكترونية والأنظمة الرقمية
-• برمجة وتشغيل المعدات الصناعية والروبوتات
-• إجراء الصيانة الوقائية والإصلاحية للأجهزة الإلكترونية
-• مراقبة جودة الإنتاج وضمان المعايير الفنية
-• إعداد التقارير الفنية وتوثيق العمليات
-
-البيئة المهنية:
-يعمل في المصانع، ورش التصنيع، مختبرات البحث والتطوير، وشركات الأتمتة الصناعية.
-
-المتطلبات الأساسية:
-• درجة في الهندسة الإلكترونية أو تخصص ذات صلة
-• خبرة في برمجة المتحكمات الدقيقة
-• معرفة بأنظمة التحكم الصناعي
-• مهارات حل المشاكل والتفكير التحليلي
-
-فرص التطوير المهني:
-مهندس أنظمة، مدير إنتاج، استشاري تقني، أو متخصص في الذكاء الاصطناعي الصناعي.
-      `;
-      
-    case 'activities':
-      return `
-1. تصميم وتطوير الدوائر الإلكترونية الأساسية والمتقدمة
-2. برمجة المتحكمات الدقيقة وأنظمة التحكم المدمجة
-3. تشغيل وصيانة خطوط الإنتاج الآلية
-4. إجراء اختبارات الجودة والتحليل الفني للمنتجات
-5. تركيب وتكوين أنظمة الأتمتة الصناعية
-6. صيانة وإصلاح المعدات الإلكترونية والصناعية
-7. تطوير برامج التحكم في العمليات الصناعية
-8. مراقبة وتحليل البيانات من أنظمة الإنتاج
-9. إعداد التقارير الفنية وتوثيق العمليات
-10. تدريب العاملين على استخدام المعدات الجديدة
-11. إدارة المشاريع التقنية وتنسيق الفرق
-12. تطبيق معايير السلامة والجودة في البيئة الصناعية
-13. تحليل الأعطال وإيجاد الحلول التقنية
-14. تطوير وتحسين العمليات الصناعية
-15. التعامل مع أنظمة الشبكات الصناعية والاتصالات
-16. إدارة المخزون التقني والقطع الغيار
-17. التخطيط للصيانة الوقائية والدورية
-18. تقييم وتحسين كفاءة الطاقة في الأنظمة
-      `;
-      
-    case 'competencies':
-      return `
-النشاط: تصميم وتطوير الدوائر الإلكترونية الأساسية والمتقدمة
-الجدارات:
-- تحليل وتصميم الدوائر الإلكترونية التناظرية والرقمية
-- استخدام برامج المحاكاة الإلكترونية والتصميم
-- فهم خصائص المكونات الإلكترونية وتطبيقاتها
-- تطبيق معايير السلامة في التصميم الإلكتروني
-
-النشاط: برمجة المتحكمات الدقيقة وأنظمة التحكم المدمجة
-الجدارات:
-- برمجة المتحكمات الدقيقة بلغات مختلفة
-- تصميم وتطوير البرمجيات المدمجة
-- فهم معمارية المعالجات والأنظمة المدمجة
-- تطبيق بروتوكولات الاتصال في الأنظمة المدمجة
-
-النشاط: تشغيل وصيانة خطوط الإنتاج الآلية
-الجدارات:
-- تشغيل وإدارة خطوط الإنتاج الآلية
-- تطبيق مبادئ الصيانة الوقائية والإصلاحية
-- استخدام أدوات القياس والاختبار الصناعية
-- إدارة وتحليل بيانات الإنتاج والأداء
-      `;
-      
-    case 'skills-knowledge':
-      return `
-المهارات العملية:
-- تطبيق قوانين الكهرباء في حل المسائل العملية
-- استخدام أجهزة القياس الإلكترونية بدقة
-- تجميع وتوصيل الدوائر الإلكترونية
-- اختبار وفحص المكونات الإلكترونية
-- قراءة وتفسير المخططات التقنية
-
-المعارف النظرية:
-- قوانين الكهرباء والمغناطيسية الأساسية
-- خصائص أشباه الموصلات والمكونات الإلكترونية
-- مبادئ الدوائر التناظرية والرقمية
-- معايير السلامة في الأعمال الكهربائية
-- رموز ومصطلحات الهندسة الإلكترونية
-      `;
-      
-    default:
-      return 'استجابة تجريبية من GEMINI';
-  }
-}
-
-// ==================================================
 // EVENT LISTENERS AND INITIALIZATION
 // ==================================================
 
@@ -1173,3 +1103,277 @@ setInterval(() => {
 console.log('تم تهيئة مصمم إطار المناهج بالذكاء الاصطناعي');
 console.log('الإصدار: 1.0.0');
 console.log('جاهز للاستخدام!');
+
+// ==================================================
+// API KEY HANDLING
+// ==================================================
+function saveApiKey() {
+  const apiKey = document.getElementById('apiKeyInput').value;
+  const apiKeyStatus = document.getElementById('apiKeyStatus');
+  if (apiKey.trim()) {
+    localStorage.setItem('userApiKey', apiKey);
+    apiKeyStatus.textContent = 'تم حفظ مفتاح API بنجاح!';
+    apiKeyStatus.className = 'text-center small text-success';
+    // Optionally, clear the input after saving for security
+    // document.getElementById('apiKeyInput').value = ''; 
+  } else {
+    apiKeyStatus.textContent = 'الرجاء إدخال مفتاح API صالح.';
+    apiKeyStatus.className = 'text-center small text-danger';
+  }
+  setTimeout(() => {
+    apiKeyStatus.textContent = '';
+  }, 3000);
+}
+
+function loadApiKey() {
+  const apiKey = localStorage.getItem('userApiKey');
+  const apiKeyInput = document.getElementById('apiKeyInput');
+  const apiKeyStatus = document.getElementById('apiKeyStatus');
+  if (apiKey) {
+    apiKeyInput.value = apiKey;
+    apiKeyStatus.textContent = 'تم تحميل مفتاح API المحفوظ.';
+    apiKeyStatus.className = 'text-center small text-info';
+  } else {
+    apiKeyStatus.textContent = 'لم يتم العثور على مفتاح API محفوظ.';
+    apiKeyStatus.className = 'text-center small text-muted';
+  }
+  setTimeout(() => {
+    apiKeyStatus.textContent = '';
+  }, 3000);
+}
+
+// Add event listener for the save button
+document.addEventListener('DOMContentLoaded', function() {
+  // ... (existing event listeners)
+
+  const saveApiKeyBtn = document.getElementById('saveApiKeyBtn');
+  if (saveApiKeyBtn) {
+    saveApiKeyBtn.addEventListener('click', saveApiKey);
+  }
+  
+  // Load API key when the page loads
+  loadApiKey(); 
+});
+
+// ==================================================
+// RETRY FUNCTIONALITY
+// ==================================================
+function showRetryButton(actionType) {
+  let mainButton, retryBtnId, retryBtnText, retryFn;
+
+  switch (actionType) {
+    case 'jobDescription':
+      mainButton = document.getElementById('generateJobDescriptionBtn');
+      retryBtnId = 'retryJobDescriptionBtn';
+      retryBtnText = 'إعادة محاولة توليد وصف الوظيفة';
+      retryFn = retryJobDescription;
+      break;
+    case 'activities':
+      mainButton = document.getElementById('generateActivitiesBtn');
+      retryBtnId = 'retryActivitiesBtn';
+      retryBtnText = 'إعادة محاولة توليد الأنشطة';
+      retryFn = retryActivities;
+      break;
+    case 'competencies':
+      mainButton = document.getElementById('generateAllCompetenciesBtn');
+      retryBtnId = 'retryCompetenciesBtn';
+      retryBtnText = 'إعادة محاولة توليد الجدارات';
+      retryFn = retryCompetencies;
+      break;
+    case 'skillsKnowledge':
+      mainButton = document.getElementById('generateSkillsAndKnowledgeBtn');
+      retryBtnId = 'retrySkillsKnowledgeBtn';
+      retryBtnText = 'إعادة محاولة توليد المهارات والمعارف';
+      retryFn = retrySkillsKnowledge;
+      break;
+    default:
+      return; // Unknown action type
+  }
+
+  if (!mainButton) return;
+
+  let retryBtn = document.getElementById(retryBtnId);
+
+  if (!retryBtn) {
+    retryBtn = document.createElement('button');
+    retryBtn.type = 'button';
+    retryBtn.className = 'btn btn-warning mt-2 mb-3 ms-2'; // Common classes
+    retryBtn.id = retryBtnId;
+    retryBtn.innerHTML = `
+      <i class="bi bi-arrow-clockwise"></i> ${retryBtnText}
+      <span class="loader" style="display: none;"></span>
+    `;
+    mainButton.parentNode.insertBefore(retryBtn, mainButton.nextSibling);
+    retryBtn.addEventListener('click', retryFn);
+  }
+  retryBtn.style.display = 'inline-block';
+  mainButton.style.display = 'none'; // Hide the main button
+}
+
+async function retryJobDescription() {
+  const mainButton = document.getElementById('generateJobDescriptionBtn');
+  const retryBtn = document.getElementById('retryJobDescriptionBtn');
+  const loader = retryBtn.querySelector('.loader');
+  const storedPrompt = curriculumData.step1.lastJobDescriptionPrompt;
+
+  if (!storedPrompt) {
+    alert('لا يوجد محاولة سابقة لإعادة المحاولة.');
+    mainButton.style.display = 'inline-block'; // Show main button
+    retryBtn.style.display = 'none'; // Hide retry button
+    return;
+  }
+
+  if (loader) loader.style.display = 'inline-block';
+  retryBtn.disabled = true;
+
+  try {
+    const response = await callActualGeminiAPI(storedPrompt, 'job-description');
+    curriculumData.step1.generatedJobDescription = response;
+    const formattedResponse = formatAIResponse(response, 'job-description');
+    document.getElementById('jobDescriptionOutput').innerHTML = formattedResponse;
+    
+    retryBtn.style.display = 'none';
+    mainButton.style.display = 'inline-block';
+    curriculumData.step1.lastJobDescriptionPrompt = null;
+  } catch (error) {
+    console.error('خطأ في إعادة محاولة توليد وصف الوظيفة:', error);
+    if (error && error.error === 'NO_API_KEY') {
+      alert(error.message);
+      mainButton.style.display = 'inline-block'; // Show main button if API key is the issue
+      retryBtn.style.display = 'none';
+    } else {
+      alert('فشلت إعادة المحاولة. يرجى المحاولة مرة أخرى.');
+      // Keep retry button visible, main button hidden
+    }
+  } finally {
+    if (loader) loader.style.display = 'none';
+    retryBtn.disabled = false;
+  }
+}
+
+async function retryActivities() {
+  const mainButton = document.getElementById('generateActivitiesBtn');
+  const retryBtn = document.getElementById('retryActivitiesBtn');
+  const loader = retryBtn.querySelector('.loader');
+  const storedPrompt = curriculumData.step2.lastActivitiesPrompt;
+
+  if (!storedPrompt) {
+    alert('لا يوجد محاولة سابقة لإعادة المحاولة.');
+    mainButton.style.display = 'inline-block';
+    retryBtn.style.display = 'none';
+    return;
+  }
+
+  if (loader) loader.style.display = 'inline-block';
+  retryBtn.disabled = true;
+
+  try {
+    const response = await callActualGeminiAPI(storedPrompt, 'activities');
+    const activities = formatAIResponse(response, 'activities');
+    curriculumData.step2.generatedActivities = activities;
+    curriculumData.step2.allActivities = [...activities];
+    displayActivitiesList();
+    
+    retryBtn.style.display = 'none';
+    mainButton.style.display = 'inline-block';
+    curriculumData.step2.lastActivitiesPrompt = null;
+  } catch (error) {
+    console.error('خطأ في إعادة محاولة توليد الأنشطة:', error);
+    if (error && error.error === 'NO_API_KEY') {
+      alert(error.message);
+      mainButton.style.display = 'inline-block';
+      retryBtn.style.display = 'none';
+    } else {
+      alert('فشلت إعادة المحاولة. يرجى المحاولة مرة أخرى.');
+    }
+  } finally {
+    if (loader) loader.style.display = 'none';
+    retryBtn.disabled = false;
+  }
+}
+
+async function retryCompetencies() {
+  const mainButton = document.getElementById('generateAllCompetenciesBtn');
+  const retryBtn = document.getElementById('retryCompetenciesBtn');
+  const loader = retryBtn.querySelector('.loader');
+  const storedPrompt = curriculumData.step3.lastCompetenciesPrompt;
+
+  if (!storedPrompt) {
+    alert('لا يوجد محاولة سابقة لإعادة المحاولة.');
+    mainButton.style.display = 'inline-block';
+    retryBtn.style.display = 'none';
+    return;
+  }
+
+  if (loader) loader.style.display = 'inline-block';
+  retryBtn.disabled = true;
+
+  try {
+    const response = await callActualGeminiAPI(storedPrompt, 'competencies');
+    // Clear previous competencies for this prompt to avoid duplication
+    curriculumData.step3.competencies = curriculumData.step3.competencies.filter(
+        c => c.activity !== storedPrompt.split('\n- ')[0].replace('بناءً على الأنشطة التالية:\n- ', '') // Basic way to get activity from prompt
+    ); // This logic might need refinement if activities can have similar names
+    parseAndStoreCompetencies(response);
+    displayCompetencies();
+    
+    retryBtn.style.display = 'none';
+    mainButton.style.display = 'inline-block';
+    curriculumData.step3.lastCompetenciesPrompt = null;
+  } catch (error) {
+    console.error('خطأ في إعادة محاولة توليد الجدارات:', error);
+     if (error && error.error === 'NO_API_KEY') {
+      alert(error.message);
+      mainButton.style.display = 'inline-block';
+      retryBtn.style.display = 'none';
+    } else {
+      alert('فشلت إعادة المحاولة. يرجى المحاولة مرة أخرى.');
+    }
+  } finally {
+    if (loader) loader.style.display = 'none';
+    retryBtn.disabled = false;
+  }
+}
+
+async function retrySkillsKnowledge() {
+  const mainButton = document.getElementById('generateSkillsAndKnowledgeBtn');
+  const retryBtn = document.getElementById('retrySkillsKnowledgeBtn');
+  const loader = retryBtn.querySelector('.loader');
+
+  // Check if there are competencies to process
+  if (!curriculumData.step3.lastSkillsKnowledgeAttempted && curriculumData.step3.competencies.length === 0) {
+    alert('لا توجد جدارات لتوليد المهارات والمعارف لها، أو لم تتم محاولة سابقة.');
+    mainButton.style.display = 'inline-block';
+    retryBtn.style.display = 'none';
+    return;
+  }
+
+  if (loader) loader.style.display = 'inline-block';
+  retryBtn.disabled = true;
+  mainButton.style.display = 'none'; // Keep main button hidden during retry
+
+  try {
+    // The generateSkillsAndKnowledge function handles its own UI updates (displayCompetencies)
+    // and internal showLoader/hideLoader for the main button.
+    await generateSkillsAndKnowledge(); 
+    
+    // If generateSkillsAndKnowledge completes successfully, it means all sub-calls were successful.
+    retryBtn.style.display = 'none'; 
+    mainButton.style.display = 'inline-block';
+    curriculumData.step3.lastSkillsKnowledgeAttempted = false; // Clear flag
+
+  } catch (error) {
+    // Errors are typically handled and alerted within generateSkillsAndKnowledge or its sub-calls.
+    // If an error bubbles up here, it's likely an unexpected one.
+    console.error('خطأ في إعادة محاولة توليد المهارات والمعارف:', error);
+    // Alert a generic message, as specific messages (like NO_API_KEY) should be handled inside generateSkillsAndKnowledge
+    if (!(error && error.error === 'NO_API_KEY')) {
+        alert('فشلت إعادة محاولة توليد المهارات والمعارف. يرجى التحقق من وحدة التحكم للمزيد من التفاصيل.');
+    }
+    // Keep retry button visible, main button hidden.
+  } finally {
+    if (loader) loader.style.display = 'none';
+    retryBtn.disabled = false;
+    // Do not show mainButton here, only on full success of the retry.
+  }
+}

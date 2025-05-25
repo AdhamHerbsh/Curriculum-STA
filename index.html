@@ -248,13 +248,28 @@
           </button>
         </div>
       </div>
+
+      <footer class="mt-5 pt-4 border-top">
+        <div class="row">
+          <div class="col-md-6 offset-md-3">
+            <h5 class="text-center mb-3">إعدادات مفتاح API</h5>
+            <div class="input-group mb-3">
+              <input type="password" id="apiKeyInput" class="form-control" placeholder="أدخل مفتاح API الخاص بك هنا...">
+              <button class="btn btn-primary" type="button" id="saveApiKeyBtn">
+                <i class="bi bi-save"></i> حفظ المفتاح
+              </button>
+            </div>
+            <p id="apiKeyStatus" class="text-center small"></p> <!-- For status messages -->
+          </div>
+        </div>
+      </footer>
     </div>
 
     <!-- Bootstrap JS Bundle -->
     <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
     <!-- Main -->
-    <script src="assets/js/main.js"></script>
     <!-- Api -->
     <script src="assets/js/api.js"></script>
+    <script src="assets/js/main.js"></script>
   </body>
 </html>
