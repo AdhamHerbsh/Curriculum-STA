@@ -139,7 +139,7 @@ async function generateJobDescription() {
     hideLoader('generateJobDescriptionBtn');
     
   } catch (error) {
-    console.error('Error generating job description:', error);
+    console.error('خطأ في توليد وصف الوظيفة:', error);
     alert('حدث خطأ أثناء توليد وصف المهنة. يرجى المحاولة مرة أخرى.');
     hideLoader('generateJobDescriptionBtn');
   }
@@ -213,7 +213,7 @@ async function generateMainActivities() {
     hideLoader('generateActivitiesBtn');
     
   } catch (error) {
-    console.error('Error generating activities:', error);
+    console.error('خطأ في توليد الأنشطة:', error);
     alert('حدث خطأ أثناء توليد الأنشطة. يرجى المحاولة مرة أخرى.');
     hideLoader('generateActivitiesBtn');
   }
@@ -222,47 +222,50 @@ async function generateMainActivities() {
 // Display Activities List
 function displayActivitiesList() {
   const container = document.getElementById('activitiesListContainer');
-  
-  if (curriculumData.step2.allActivities.length === 0) {
-    container.innerHTML = '<p class="text-muted">سيتم عرض الأنشطة المقترحة هنا كقائمة اختيار.</p>';
-    return;
-  }
-  
-  let html = '<div class="activities-list">';
-  
-  curriculumData.step2.allActivities.forEach((activity, index) => {
-    const sourceIcon = activity.source === 'gemini' ? 
-      '<i class="bi bi-robot text-primary" title="مُنشأ بواسطة GEMINI"></i>' : 
-      '<i class="bi bi-person text-success" title="مُضاف من المستخدم"></i>';
+  container.innerHTML = '<div class="content-loader"><div class="spinner"></div><p class="ms-2">جاري تحميل الأنشطة...</p></div>';
+
+  setTimeout(() => {
+    if (curriculumData.step2.allActivities.length === 0) {
+      container.innerHTML = '<p class="text-muted">سيتم عرض الأنشطة المقترحة هنا كقائمة اختيار.</p>';
+      return;
+    }
     
-    html += `
-      <div class="form-check activity-item p-3 border rounded mb-2">
-        <div class="d-flex justify-content-between align-items-start">
-          <div class="flex-grow-1">
-            <input class="form-check-input me-2" type="checkbox" 
-                   id="activity_${activity.id}" 
-                   ${activity.selected ? 'checked' : ''}
-                   onchange="toggleActivity(${activity.id})">
-            <label class="form-check-label flex-grow-1" for="activity_${activity.id}">
-              <textarea class="form-control border-0 p-0 activity-text" 
-                        onchange="updateActivityText(${activity.id}, this.value)"
-                        rows="2">${activity.text}</textarea>
-            </label>
-          </div>
-          <div class="ms-2">
-            ${sourceIcon}
-            <button class="btn btn-sm btn-outline-danger ms-2" 
-                    onclick="removeActivity(${activity.id})" title="حذف النشاط">
-              <i class="bi bi-trash"></i>
-            </button>
+    let html = '<div class="activities-list">';
+    
+    curriculumData.step2.allActivities.forEach((activity, index) => {
+      const sourceIcon = activity.source === 'gemini' ? 
+        '<i class="bi bi-robot text-primary" title="مُنشأ بواسطة GEMINI"></i>' : 
+        '<i class="bi bi-person text-success" title="مُضاف من المستخدم"></i>';
+      
+      html += `
+        <div class="form-check activity-item p-3 border rounded mb-2">
+          <div class="d-flex justify-content-between align-items-start">
+            <div class="flex-grow-1">
+              <input class="form-check-input me-2" type="checkbox" 
+                     id="activity_${activity.id}" 
+                     ${activity.selected ? 'checked' : ''}
+                     onchange="toggleActivity(${activity.id})">
+              <label class="form-check-label flex-grow-1" for="activity_${activity.id}">
+                <textarea class="form-control border-0 p-0 activity-text" 
+                          onchange="updateActivityText(${activity.id}, this.value)"
+                          rows="2">${activity.text}</textarea>
+              </label>
+            </div>
+            <div class="ms-2">
+              ${sourceIcon}
+              <button class="btn btn-sm btn-outline-danger ms-2" 
+                      onclick="removeActivity(${activity.id})" title="حذف النشاط">
+                <i class="bi bi-trash"></i>
+              </button>
+            </div>
           </div>
         </div>
-      </div>
-    `;
-  });
-  
-  html += '</div>';
-  container.innerHTML = html;
+      `;
+    });
+    
+    html += '</div>';
+    container.innerHTML = html;
+  }, 50); // 50ms delay
 }
 
 // Toggle Activity Selection
@@ -406,7 +409,7 @@ async function generateAllCompetencies() {
     hideLoader('generateAllCompetencies');
     
   } catch (error) {
-    console.error('Error generating competencies:', error);
+    console.error('خطأ في توليد الجدارات:', error);
     alert('حدث خطأ أثناء توليد الجدارات. يرجى المحاولة مرة أخرى.');
     hideLoader('generateAllCompetencies');
   }
@@ -454,53 +457,56 @@ function parseAndStoreCompetencies(response) {
 // Display Competencies
 function displayCompetencies() {
   const container = document.getElementById('competenciesContainer');
-  
-  if (curriculumData.step3.competencies.length === 0) {
-    container.innerHTML = '<p class="text-muted">سيتم عرض الجدارات هنا بعد التوليد.</p>';
-    return;
-  }
-  
-  let html = '<div class="competencies-display">';
-  
-  curriculumData.step3.competencies.forEach((activityComp, actIndex) => {
-    html += `
-      <div class="activity-competencies mb-4 p-3 border rounded">
-        <h5 class="text-primary"><i class="bi bi-target"></i> ${activityComp.activity}</h5>
-        <div class="competencies-list">
-    `;
+  container.innerHTML = '<div class="content-loader"><div class="spinner"></div><p class="ms-2">جاري تحميل الجدارات...</p></div>';
+
+  setTimeout(() => {
+    if (curriculumData.step3.competencies.length === 0) {
+      container.innerHTML = '<p class="text-muted">سيتم عرض الجدارات هنا بعد التوليد.</p>';
+      return;
+    }
     
-    activityComp.competencies.forEach((comp, compIndex) => {
+    let html = '<div class="competencies-display">';
+    
+    curriculumData.step3.competencies.forEach((activityComp, actIndex) => {
       html += `
-        <div class="competency-item mb-3 p-2 bg-light rounded">
-          <div class="d-flex justify-content-between align-items-start">
-            <textarea class="form-control border-0 bg-transparent competency-text" 
-                      onchange="updateCompetencyText(${actIndex}, ${compIndex}, this.value)"
-                      rows="2">${comp.text}</textarea>
-            <button class="btn btn-sm btn-outline-danger ms-2" 
-                    onclick="removeCompetency(${actIndex}, ${compIndex})">
-              <i class="bi bi-trash"></i>
-            </button>
+        <div class="activity-competencies mb-4 p-3 border rounded">
+          <h5 class="text-primary"><i class="bi bi-target"></i> ${activityComp.activity}</h5>
+          <div class="competencies-list">
+      `;
+      
+      activityComp.competencies.forEach((comp, compIndex) => {
+        html += `
+          <div class="competency-item mb-3 p-2 bg-light rounded">
+            <div class="d-flex justify-content-between align-items-start">
+              <textarea class="form-control border-0 bg-transparent competency-text" 
+                        onchange="updateCompetencyText(${actIndex}, ${compIndex}, this.value)"
+                        rows="2">${comp.text}</textarea>
+              <button class="btn btn-sm btn-outline-danger ms-2" 
+                      onclick="removeCompetency(${actIndex}, ${compIndex})">
+                <i class="bi bi-trash"></i>
+              </button>
+            </div>
+            
+            <div class="skills-knowledge mt-2" id="skillsKnowledge_${actIndex}_${compIndex}">
+              <!-- Skills and knowledge will be populated here -->
+            </div>
           </div>
-          
-          <div class="skills-knowledge mt-2" id="skillsKnowledge_${actIndex}_${compIndex}">
-            <!-- Skills and knowledge will be populated here -->
+        `;
+      });
+      
+      html += `
           </div>
+          <button class="btn btn-sm btn-outline-primary" 
+                  onclick="addCustomCompetency(${actIndex})">
+            <i class="bi bi-plus"></i> إضافة جدارة مخصصة
+          </button>
         </div>
       `;
     });
     
-    html += `
-        </div>
-        <button class="btn btn-sm btn-outline-primary" 
-                onclick="addCustomCompetency(${actIndex})">
-          <i class="bi bi-plus"></i> إضافة جدارة مخصصة
-        </button>
-      </div>
-    `;
-  });
-  
-  html += '</div>';
-  container.innerHTML = html;
+    html += '</div>';
+    container.innerHTML = html;
+  }, 50); // 50ms delay
 }
 
 // Generate Skills and Knowledge
@@ -541,7 +547,7 @@ async function generateSkillsAndKnowledge() {
     hideLoader('generateSkillsAndKnowledge');
     
   } catch (error) {
-    console.error('Error generating skills and knowledge:', error);
+    console.error('خطأ في توليد المهارات والمعارف:', error);
     alert('حدث خطأ أثناء توليد المهارات والمعارف.');
     hideLoader('generateSkillsAndKnowledge');
   }
@@ -741,7 +747,7 @@ function displayFinalFramework() {
         <button type="button" class="btn btn-secondary" onclick="showStep(3)">
           <i class="bi bi-arrow-right-circle-fill"></i> السابق إلى الخطوة 3
         </button>
-        <button type="button" class="btn btn-success" onclick="resetFramework()">
+        <button type="button" class="btn btn-success" onclick="resetFramework()" title="إعادة تشغيل التطبيق بالكامل وفقدان جميع البيانات الحالية">
           <i class="bi bi-arrow-clockwise"></i> إعادة تشغيل
         </button>
       </div>
@@ -766,7 +772,7 @@ function exportFramework(format) {
     
     const link = document.createElement('a');
     link.href = url;
-    link.download = `curriculum-framework-${Date.now()}.json`;
+    link.download = `framework-${Date.now()}.json`;
     link.click();
     
     URL.revokeObjectURL(url);
@@ -1051,27 +1057,43 @@ function addCustomCompetency(actIndex) {
 
 // Show Progress Indicator
 function updateProgressIndicator(currentStep) {
-  // You can add a progress bar here
   const steps = ['تعريف المهنة', 'الأنشطة الرئيسية', 'الجدارات والمهارات', 'الإطار النهائي'];
   const progress = (currentStep / 4) * 100;
   
-  // Create or update progress bar if it exists
-  let progressBar = document.getElementById('progressBar');
-  if (!progressBar) {
-    progressBar = document.createElement('div');
-    progressBar.id = 'progressBar';
-    progressBar.className = 'progress mb-4';
-    progressBar.innerHTML = `
+  let progressWrapper = document.getElementById('progressWrapper');
+  
+  if (!progressWrapper) {
+    progressWrapper = document.createElement('div');
+    progressWrapper.id = 'progressWrapper';
+    progressWrapper.className = 'mb-4'; // Apply mb-4 to the wrapper
+
+    const progressLabel = document.createElement('p');
+    progressLabel.id = 'progressLabel';
+    progressLabel.className = 'text-muted mb-1';
+    progressLabel.textContent = 'الخطوة الحالية:';
+    progressWrapper.appendChild(progressLabel);
+
+    const progressBarDiv = document.createElement('div');
+    progressBarDiv.id = 'progressBar';
+    progressBarDiv.className = 'progress'; // progressBar class is just "progress"
+    progressBarDiv.innerHTML = `
       <div class="progress-bar progress-bar-striped progress-bar-animated" 
            role="progressbar" style="width: ${progress}%">
         ${steps[currentStep - 1]}
       </div>
     `;
-    document.querySelector('.container').insertBefore(progressBar, document.querySelector('.container').firstChild);
+    progressWrapper.appendChild(progressBarDiv);
+    
+    document.querySelector('.container').insertBefore(progressWrapper, document.querySelector('.container').firstChild);
   } else {
-    const bar = progressBar.querySelector('.progress-bar');
+    const bar = progressWrapper.querySelector('.progress-bar'); // Select the inner progress-bar
     bar.style.width = progress + '%';
     bar.textContent = steps[currentStep - 1];
+    // Ensure label is visible (it should be by default as it's part of the initial structure)
+    const progressLabel = document.getElementById('progressLabel');
+    if (progressLabel) {
+        progressLabel.style.display = 'block'; 
+    }
   }
 }
 
@@ -1119,9 +1141,9 @@ function exportToExcel() {
 function saveProgress() {
   try {
     localStorage.setItem('curriculumFrameworkData', JSON.stringify(curriculumData));
-    console.log('Progress saved successfully');
+    console.log('تم حفظ التقدم بنجاح');
   } catch (error) {
-    console.warn('Could not save progress to localStorage:', error);
+    console.warn('لم يتم حفظ التقدم في التخزين المحلي:', error);
   }
 }
 
@@ -1131,11 +1153,11 @@ function loadProgress() {
     const saved = localStorage.getItem('curriculumFrameworkData');
     if (saved) {
       curriculumData = JSON.parse(saved);
-      console.log('Progress loaded successfully');
+      console.log('تم تحميل التقدم بنجاح');
       return true;
     }
   } catch (error) {
-    console.warn('Could not load progress from localStorage:', error);
+    console.warn('لم يتم تحميل التقدم من التخزين المحلي:', error);
   }
   return false;
 }
@@ -1148,6 +1170,6 @@ setInterval(() => {
 }, 30000); // Auto-save every 30 seconds
 
 // Initialize the application
-console.log('AI-Powered Curriculum Framework Designer Initialized');
-console.log('Version: 1.0.0');
-console.log('Ready for use!');
+console.log('تم تهيئة مصمم إطار المناهج بالذكاء الاصطناعي');
+console.log('الإصدار: 1.0.0');
+console.log('جاهز للاستخدام!');
