@@ -40,9 +40,12 @@ class AIAPIHandler {
     );
 
     // New Buttons for Job Analysis and Activities
-    this.generateJobAnalysisBtn = document.getElementById("generate-job-analysis-btn");
-    this.generateActivitiesBtn = document.getElementById("generate-activities-btn");
-
+    this.generateJobAnalysisBtn = document.getElementById(
+      "generate-job-analysis-btn"
+    );
+    this.generateActivitiesBtn = document.getElementById(
+      "generate-activities-btn"
+    );
 
     // API Configuration
     this.config = {
@@ -64,7 +67,12 @@ class AIAPIHandler {
     this.history = this.loadHistory();
     this.filteredHistory = [...this.history];
     this.currentRequest = null;
-    this.currentResponses = { deepseek: null, gemini: null, jobAnalysis: null, activities: null };
+    this.currentResponses = {
+      deepseek: null,
+      gemini: null,
+      jobAnalysis: null,
+      activities: null,
+    };
 
     this.init();
   }
@@ -83,7 +91,8 @@ class AIAPIHandler {
     const savedKey = localStorage.getItem("geminiApiKey");
     if (savedKey) {
       this.config.gemini.apiKey = savedKey;
-      if (this.geminiApiKeyStatus) { // Check if element exists
+      if (this.geminiApiKeyStatus) {
+        // Check if element exists
         this.geminiApiKeyStatus.textContent = "مفتاح Gemini API مُعَدّ.";
         setTimeout(() => {
           if (this.geminiApiKeyStatus) this.geminiApiKeyStatus.textContent = "";
@@ -92,12 +101,12 @@ class AIAPIHandler {
       // Optionally, you could update the input field, but it's type="password"
       // this.geminiApiKeyInput.value = savedKey; // Or show '********'
     } else {
-       if (this.geminiApiKeyStatus) {
+      if (this.geminiApiKeyStatus) {
         this.geminiApiKeyStatus.textContent = "مفتاح Gemini API غير مُعَدّ.";
-         setTimeout(() => {
+        setTimeout(() => {
           if (this.geminiApiKeyStatus) this.geminiApiKeyStatus.textContent = "";
         }, 3000);
-       }
+      }
     }
   }
 
@@ -125,19 +134,19 @@ class AIAPIHandler {
 
     // Event listeners for new Job Analysis and Activities buttons
     if (this.generateJobAnalysisBtn) {
-        this.generateJobAnalysisBtn.addEventListener("click", (e) => {
-            e.preventDefault();
-            this.handleAPICall("gemini", "Job Analysis");
-        });
+      this.generateJobAnalysisBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        this.handleAPICall("gemini", "Job Analysis");
+      });
     }
 
     if (this.generateActivitiesBtn) {
-        this.generateActivitiesBtn.addEventListener("click", (e) => {
-            e.preventDefault();
-            this.handleAPICall("gemini", "Activities");
-        });
+      this.generateActivitiesBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        this.handleAPICall("gemini", "Activities");
+      });
     }
-    
+
     // History event listeners
     this.saveCurrentBtn.addEventListener("click", () =>
       this.saveCurrentToHistory()
@@ -233,38 +242,45 @@ class AIAPIHandler {
   async handleAPICall(provider, queryType = "Curriculum Review") {
     const rawInput = this.textarea.value; // This is the general curriculum description
     let sanitizedInput = ValidationHelper.sanitizeInput(rawInput);
-    
+
     // For Job Analysis and Activities, the main input might be less critical or predefined
     // For Curriculum Review, it's essential.
     if (queryType === "Curriculum Review") {
-        const validation = ValidationHelper.validateInput(sanitizedInput);
-        if (!validation.valid) {
-          this.showError(validation.message);
-          return;
-        }
-        // Update textarea with sanitized input if it changed
-        if (rawInput !== sanitizedInput) {
-          this.textarea.value = sanitizedInput;
-        }
+      const validation = ValidationHelper.validateInput(sanitizedInput);
+      if (!validation.valid) {
+        this.showError(validation.message);
+        return;
+      }
+      // Update textarea with sanitized input if it changed
+      if (rawInput !== sanitizedInput) {
+        this.textarea.value = sanitizedInput;
+      }
     } else {
-        // For other types, we might not need input from the textarea or use a default.
-        // If sanitizedInput is empty, we can pass a generic placeholder or specific context.
-        if (!sanitizedInput && (queryType === "Job Analysis" || queryType === "Activities")) {
-            sanitizedInput = "منهج الإلكترونيات المصري"; // Default context if textarea is empty
-        }
+      // For other types, we might not need input from the textarea or use a default.
+      // If sanitizedInput is empty, we can pass a generic placeholder or specific context.
+      if (
+        !sanitizedInput &&
+        (queryType === "Job Analysis" || queryType === "Activities")
+      ) {
+        sanitizedInput = "منهج الإلكترونيات المصري"; // Default context if textarea is empty
+      }
     }
-
 
     // Store current request (might need adjustment based on queryType for history)
     this.currentRequest = sanitizedInput; // Or a more specific request string based on queryType
 
     // For new query types, force Gemini if DeepSeek is selected.
-    if ((queryType === "Job Analysis" || queryType === "Activities") && provider === "deepseek") {
-        console.warn(`DeepSeek is not supported for "${queryType}". Switching to Gemini.`);
-        provider = "gemini"; 
-        // Optionally, disable the DeepSeek button for these types in UI (handled in main.js)
+    if (
+      (queryType === "Job Analysis" || queryType === "Activities") &&
+      provider === "deepseek"
+    ) {
+      console.warn(
+        `DeepSeek is not supported for "${queryType}". Switching to Gemini.`
+      );
+      provider = "gemini";
+      // Optionally, disable the DeepSeek button for these types in UI (handled in main.js)
     }
-    
+
     try {
       this.showLoading(provider, queryType); // Pass queryType to showLoading
       this.hideMessages();
@@ -272,20 +288,19 @@ class AIAPIHandler {
 
       const response = await this.callAPI(provider, sanitizedInput, queryType);
       this.displayResponse(provider, response, queryType);
-      
+
       // Store responses
       if (queryType === "Curriculum Review") {
         this.currentResponses[provider] = response;
       } else if (queryType === "Job Analysis") {
         // Storing separately for clarity, though Gemini is the only provider for now
-        this.currentResponses.jobAnalysis = { [provider]: response }; 
+        this.currentResponses.jobAnalysis = { [provider]: response };
       } else if (queryType === "Activities") {
         this.currentResponses.activities = { [provider]: response };
       } else {
-         // Default to current provider if queryType is unknown, or handle as error
+        // Default to current provider if queryType is unknown, or handle as error
         this.currentResponses[provider] = response;
       }
-
 
       this.showSuccess(
         `تم توليد "${queryType}" بنجاح من ${provider.toUpperCase()}`
@@ -294,7 +309,9 @@ class AIAPIHandler {
     } catch (error) {
       console.error(`${provider} API Error for ${queryType}:`, error);
       this.showError(
-        `حدث خطأ في الاتصال بـ ${provider.toUpperCase()} لـ "${queryType}": ${error.message}`
+        `حدث خطأ في الاتصال بـ ${provider.toUpperCase()} لـ "${queryType}": ${
+          error.message
+        }`
       );
       this.updateStatusIndicators(provider, "error", queryType);
     } finally {
@@ -306,17 +323,24 @@ class AIAPIHandler {
     const prompt = this.buildPrompt(input, queryType);
 
     // If new types and provider is DeepSeek, we can prevent the call here too.
-    if ((queryType === "Job Analysis" || queryType === "Activities") && provider === "deepseek") {
-        // This case should ideally be handled in handleAPICall by switching provider to Gemini.
-        // If it still reaches here, it means DeepSeek was forced for a new type.
-        console.warn(`Skipping DeepSeek call for ${queryType} as it's handled by Gemini.`);
-        return Promise.resolve("تم توجيه هذا الطلب إلى Gemini."); // Or throw error
+    if (
+      (queryType === "Job Analysis" || queryType === "Activities") &&
+      provider === "deepseek"
+    ) {
+      // This case should ideally be handled in handleAPICall by switching provider to Gemini.
+      // If it still reaches here, it means DeepSeek was forced for a new type.
+      console.warn(
+        `Skipping DeepSeek call for ${queryType} as it's handled by Gemini.`
+      );
+      return Promise.resolve("تم توجيه هذا الطلب إلى Gemini."); // Or throw error
     }
 
     switch (provider) {
       case "deepseek": // Only for Curriculum Review now
         if (queryType !== "Curriculum Review") {
-            return Promise.reject(new Error("DeepSeek is only for Curriculum Review."));
+          return Promise.reject(
+            new Error("DeepSeek is only for Curriculum Review.")
+          );
         }
         return await this.callDeepSeekAPI(prompt);
       case "gemini":
@@ -328,7 +352,13 @@ class AIAPIHandler {
 
   buildPrompt(input, queryType = "Curriculum Review") {
     let prompt = "";
-    const jobTitles = ["عنوان الوظيفة 1", "عنوان الوظيفة 2", "عنوان الوظيفة 3", "عنوان الوظيفة 4", "عنوان الوظيفة 5"];
+    const jobTitles = [
+      "عنوان الوظيفة 1",
+      "عنوان الوظيفة 2",
+      "عنوان الوظيفة 3",
+      "عنوان الوظيفة 4",
+      "عنوان الوظيفة 5",
+    ];
     const context = input || "منهج الإلكترونيات في مصر"; // Use input if available, else default
 
     switch (queryType) {
@@ -344,7 +374,9 @@ ${jobTitles.map((title, index) => `${index + 1}. ${title}`).join("\n")}
 الرجاء تقديم الإجابة باللغة العربية وبأسلوب منظم وواضح لكل وظيفة على حدة.`;
         break;
       case "Activities":
-        prompt = `بناءً على ${context} والوظائف المحتملة مثل (${jobTitles.join(", ")}), يرجى اقتراح وتوصيف ما لا يقل عن 18 نشاطًا تدريبيًا عمليًا وتطبيقيًا. 
+        prompt = `بناءً على ${context} والوظائف المحتملة مثل (${jobTitles.join(
+          ", "
+        )}), يرجى اقتراح وتوصيف ما لا يقل عن 18 نشاطًا تدريبيًا عمليًا وتطبيقيًا. 
 هذه الأنشطة يجب أن تكون مصممة لطلاب يدرسون منهج الإلكترونيات وتهدف إلى إعدادهم لسوق العمل في المجالات ذات الصلة.
 
 لكل نشاط، يرجى ذكر:
@@ -372,7 +404,8 @@ ${input}
     return prompt;
   }
 
-  async callDeepSeekAPI(prompt) { // This should now only be called for "Curriculum Review"
+  async callDeepSeekAPI(prompt) {
+    // This should now only be called for "Curriculum Review"
     const response = await fetch(this.config.deepSeek.url, {
       method: "POST",
       headers: {
@@ -423,9 +456,7 @@ ${input}
       this.showError(
         "خطأ: مفتاح Gemini API غير موجود أو غير صالح. يرجى إعداده في منطقة التكوين أسفل الصفحة."
       );
-      return Promise.reject(
-        new Error("Gemini API Key missing or invalid.")
-      );
+      return Promise.reject(new Error("Gemini API Key missing or invalid."));
     }
 
     const url = `${this.config.gemini.url}?key=${apiKey}`;
@@ -485,12 +516,13 @@ ${input}
 
     // TODO: In a future step, create dedicated output elements for Job Analysis and Activities in index.html
     // The actual display in their specific HTML sections will be handled by new functions.
-    
+
     if (queryType === "Job Analysis") {
       this.parseAndDisplayJobAnalysis(response); // Pass raw response
     } else if (queryType === "Activities") {
       this.parseAndDisplayActivities(response); // Pass raw response
-    } else { // Curriculum Review
+    } else {
+      // Curriculum Review
       if (provider === "deepseek") {
         this.deepSeekOutput.innerHTML = formattedResponse; // formattedResponse is fine here
       } else if (provider === "gemini") {
@@ -503,38 +535,46 @@ ${input}
     try {
       // Attempt to split by lines that start with a number and a dot (e.g., "1.", "2.")
       // This is a common way Gemini might structure lists.
-      const jobSections = rawResponse.split(/\n(?=\d+\.\s)/).map(s => s.trim()).filter(s => s);
+      const jobSections = rawResponse
+        .split(/\n(?=\d+\.\s)/)
+        .map((s) => s.trim())
+        .filter((s) => s);
 
       if (jobSections.length === 0 && rawResponse.includes("عنوان الوظيفة")) {
-          // Fallback: try splitting by "عنوان الوظيفة" if the numbered list fails
-          // This is less robust as the title itself contains this phrase.
-          // A better approach would be to look for markdown headers if that's expected.
-          // For now, this is a simple fallback.
-          const keyword = "عنوان الوظيفة";
-          let parts = rawResponse.split(new RegExp(`(?=${keyword}\\s*\\d+)`, 'g'));
-          if (parts.length > 1) {
-              jobSections.length = 0; // Clear previous attempt
-              for(let i=0; i < parts.length; i++) {
-                  if (parts[i].trim().startsWith(keyword)) {
-                      jobSections.push(parts[i] + (parts[i+1] || ""));
-                      i++; // skip next part as it's consumed
-                  } else if (jobSections.length > 0) { // Append to previous if not starting with keyword
-                      jobSections[jobSections.length-1] += parts[i];
-                  }
-              }
+        // Fallback: try splitting by "عنوان الوظيفة" if the numbered list fails
+        // This is less robust as the title itself contains this phrase.
+        // A better approach would be to look for markdown headers if that's expected.
+        // For now, this is a simple fallback.
+        const keyword = "عنوان الوظيفة";
+        let parts = rawResponse.split(
+          new RegExp(`(?=${keyword}\\s*\\d+)`, "g")
+        );
+        if (parts.length > 1) {
+          jobSections.length = 0; // Clear previous attempt
+          for (let i = 0; i < parts.length; i++) {
+            if (parts[i].trim().startsWith(keyword)) {
+              jobSections.push(parts[i] + (parts[i + 1] || ""));
+              i++; // skip next part as it's consumed
+            } else if (jobSections.length > 0) {
+              // Append to previous if not starting with keyword
+              jobSections[jobSections.length - 1] += parts[i];
+            }
           }
+        }
       }
-      
+
       // Clear previous job analysis content
       for (let i = 1; i <= 5; i++) {
         const titleEl = document.getElementById(`job-title-${i}`);
         const descEl = document.getElementById(`job-desc-${i}`);
         if (titleEl) titleEl.textContent = `عنوان الوظيفة ${i}`;
-        if (descEl) descEl.innerHTML = `وصف موجز للوظيفة ${i} يوضح طبيعتها والمهام الرئيسية. هذا النص هو مثال مؤقت.`;
+        if (descEl)
+          descEl.innerHTML = `وصف موجز للوظيفة ${i} يوضح طبيعتها والمهام الرئيسية. هذا النص هو مثال مؤقت.`;
       }
 
       if (jobSections.length < 1) {
-        document.getElementById('job-desc-1').innerHTML = '<em class="card-error-message">تعذر تحليل استجابة تحليل الوظائف. الرجاء المحاولة مرة أخرى أو التحقق من تنسيق الاستجابة.</em>';
+        document.getElementById("job-desc-1").innerHTML =
+          '<em class="card-error-message">تعذر تحليل استجابة تحليل الوظائف. الرجاء المحاولة مرة أخرى أو التحقق من تنسيق الاستجابة.</em>';
         return;
       }
 
@@ -544,27 +584,35 @@ ${input}
 
         if (titleEl && descEl) {
           // Extract title (first line, remove number if present)
-          let lines = section.split('\n');
-          let title = lines[0].replace(/^\d+\.\s*/, '').trim();
-          
-          // The rest is description
-          let description = lines.slice(1).join('\n').trim();
+          let lines = section.split("\n");
+          let title = lines[0].replace(/^\d+\.\s*/, "").trim();
 
-          if (!description && lines.length > 1 && !lines[1].match(/^\d+\.\s*/)) {
-             // If description is empty, maybe the title took more than one line or formatting is different.
-             // Try to find a natural break or assume first line is title and rest is desc.
-             // This part might need more sophisticated title vs description separation logic
-             // based on actual API output format.
+          // The rest is description
+          let description = lines.slice(1).join("\n").trim();
+
+          if (
+            !description &&
+            lines.length > 1 &&
+            !lines[1].match(/^\d+\.\s*/)
+          ) {
+            // If description is empty, maybe the title took more than one line or formatting is different.
+            // Try to find a natural break or assume first line is title and rest is desc.
+            // This part might need more sophisticated title vs description separation logic
+            // based on actual API output format.
           }
-          
+
           titleEl.textContent = title || `عنوان الوظيفة ${index + 1}`; // Fallback title
-          descEl.innerHTML = this.formatResponse(description) || '<em class="text-muted">لا يوجد وصف متوفر.</em>';
+          descEl.innerHTML =
+            this.formatResponse(description) ||
+            '<em class="text-muted">لا يوجد وصف متوفر.</em>';
         }
       });
     } catch (error) {
       console.error("Error parsing job analysis response:", error);
-      const descEl = document.getElementById('job-desc-1');
-      if(descEl) descEl.innerHTML = '<em class="card-error-message">حدث خطأ أثناء معالجة بيانات تحليل الوظائف.</em>';
+      const descEl = document.getElementById("job-desc-1");
+      if (descEl)
+        descEl.innerHTML =
+          '<em class="card-error-message">حدث خطأ أثناء معالجة بيانات تحليل الوظائف.</em>';
     }
   }
 
@@ -572,10 +620,11 @@ ${input}
     try {
       // Split by newlines, then filter out empty lines.
       // Also try to handle lines starting with "-" or numbers as list items.
-      const activities = rawResponse.split('\n')
-                                  .map(line => line.replace(/^- \s*|^\d+\.\s*/, '').trim())
-                                  .filter(line => line.length > 0);
-      
+      const activities = rawResponse
+        .split("\n")
+        .map((line) => line.replace(/^- \s*|^\d+\.\s*/, "").trim())
+        .filter((line) => line.length > 0);
+
       // Clear previous activities content
       for (let i = 1; i <= 18; i++) {
         const activityEl = document.getElementById(`activity-text-${i}`);
@@ -583,41 +632,51 @@ ${input}
       }
 
       if (activities.length === 0) {
-        document.getElementById('activity-text-1').innerHTML = '<em class="card-error-message">تعذر تحليل استجابة الأنشطة. الرجاء المحاولة مرة أخرى.</em>';
+        document.getElementById("activity-text-1").innerHTML =
+          '<em class="card-error-message">تعذر تحليل استجابة الأنشطة. الرجاء المحاولة مرة أخرى.</em>';
         return;
       }
-      
+
       activities.slice(0, 18).forEach((activityText, index) => {
-        const activityEl = document.getElementById(`activity-text-${index + 1}`);
+        const activityEl = document.getElementById(
+          `activity-text-${index + 1}`
+        );
         if (activityEl) {
           activityEl.innerHTML = this.formatResponse(activityText); // Use formatResponse for potential markdown in activity text
         }
       });
     } catch (error) {
       console.error("Error parsing activities response:", error);
-      const activityEl = document.getElementById('activity-text-1');
-      if(activityEl) activityEl.innerHTML = '<em class="card-error-message">حدث خطأ أثناء معالجة بيانات الأنشطة.</em>';
+      const activityEl = document.getElementById("activity-text-1");
+      if (activityEl)
+        activityEl.innerHTML =
+          '<em class="card-error-message">حدث خطأ أثناء معالجة بيانات الأنشطة.</em>';
     }
   }
-
 
   formatResponse(text) {
     if (!text) return "<p><em>لا يوجد محتوى لعرضه.</em></p>";
     // Enhanced markdown to HTML conversion
     let html = text
-      .replace(/^(#{1,6})\s*(.*)$/gm, (match, hashes, content) => `<h${hashes.length}>${content}</h${hashes.length}>`) // Headers
+      .replace(
+        /^(#{1,6})\s*(.*)$/gm,
+        (match, hashes, content) =>
+          `<h${hashes.length}>${content}</h${hashes.length}>`
+      ) // Headers
       .replace(/\n\n/g, "</p><p>") // Double newline to paragraph
-      .replace(/\n/g, "<br>")       // Single newline to line break
+      .replace(/\n/g, "<br>") // Single newline to line break
       .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>") // Bold
-      .replace(/\*(.*?)\*/g, "<em>$1</em>")         // Italic
+      .replace(/\*(.*?)\*/g, "<em>$1</em>") // Italic
       .replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" target="_blank">$1</a>') // Links
       .replace(/^- (.*)$/gm, "<li>$1</li>"); // List items (simple)
 
     // Wrap list items in <ul> if not already done by more complex logic
     if (html.includes("<li>") && !html.includes("<ul>")) {
-        html = html.replace(/<li>/g, "<ul><li>").replace(/<\/li>(?!<li>)/g, "</li></ul>");
+      html = html
+        .replace(/<li>/g, "<ul><li>")
+        .replace(/<\/li>(?!<li>)/g, "</li></ul>");
     }
-    
+
     // Ensure the whole text is wrapped in a paragraph if no other block element starts it
     if (!html.match(/^<(p|h[1-6]|ul|ol|li|blockquote|pre|hr)/)) {
       html = "<p>" + html;
@@ -633,23 +692,25 @@ ${input}
   showLoading(provider, queryType = "Curriculum Review") {
     let button;
     switch (queryType) {
-        case "Job Analysis":
-            button = this.generateJobAnalysisBtn;
-            break;
-        case "Activities":
-            button = this.generateActivitiesBtn;
-            break;
-        case "Curriculum Review":
-        default:
-            button = (provider === "deepseek") ? this.deepSeekButton : this.geminiButton;
-            break;
+      case "Job Analysis":
+        button = this.generateJobAnalysisBtn;
+        break;
+      case "Activities":
+        button = this.generateActivitiesBtn;
+        break;
+      case "Curriculum Review":
+      default:
+        button =
+          provider === "deepseek" ? this.deepSeekButton : this.geminiButton;
+        break;
     }
 
     if (!button) return; // If no button matches, exit
 
     // Check if the button has a loader element
     let loader = button.querySelector(".loader");
-    if (!loader) { // Should ideally exist, but good to check
+    if (!loader) {
+      // Should ideally exist, but good to check
       loader = document.createElement("span");
       loader.className = "loader";
       button.appendChild(loader);
@@ -663,18 +724,19 @@ ${input}
   hideLoading(provider, queryType = "Curriculum Review") {
     let button;
     switch (queryType) {
-        case "Job Analysis":
-            button = this.generateJobAnalysisBtn;
-            break;
-        case "Activities":
-            button = this.generateActivitiesBtn;
-            break;
-        case "Curriculum Review":
-        default:
-            button = (provider === "deepseek") ? this.deepSeekButton : this.geminiButton;
-            break;
+      case "Job Analysis":
+        button = this.generateJobAnalysisBtn;
+        break;
+      case "Activities":
+        button = this.generateActivitiesBtn;
+        break;
+      case "Curriculum Review":
+      default:
+        button =
+          provider === "deepseek" ? this.deepSeekButton : this.geminiButton;
+        break;
     }
-    
+
     if (!button) return;
 
     const loader = button.querySelector(".loader");
@@ -686,22 +748,28 @@ ${input}
     }
   }
 
-  updateStatusIndicators(provider = null, status = null, queryType = "Curriculum Review") {
+  updateStatusIndicators(
+    provider = null,
+    status = null,
+    queryType = "Curriculum Review"
+  ) {
     // TODO: Add status indicators for new sections if they are separate from main gemini/deepseek indicators
     if (provider && status) {
-        let indicator;
-        if (queryType === "Job Analysis") {
-            // Example: indicator = document.getElementById('job-analysis-status-indicator');
-            indicator = this.geminiStatus; // Placeholder
-        } else if (queryType === "Activities") {
-            // Example: indicator = document.getElementById('activities-status-indicator');
-            indicator = this.geminiStatus; // Placeholder
-        } else { // Curriculum Review
-            indicator = provider === "deepseek" ? this.deepSeekStatus : this.geminiStatus;
-        }
-        if (indicator) {
-            indicator.className = `status-indicator status-${status}`;
-        }
+      let indicator;
+      if (queryType === "Job Analysis") {
+        // Example: indicator = document.getElementById('job-analysis-status-indicator');
+        indicator = this.geminiStatus; // Placeholder
+      } else if (queryType === "Activities") {
+        // Example: indicator = document.getElementById('activities-status-indicator');
+        indicator = this.geminiStatus; // Placeholder
+      } else {
+        // Curriculum Review
+        indicator =
+          provider === "deepseek" ? this.deepSeekStatus : this.geminiStatus;
+      }
+      if (indicator) {
+        indicator.className = `status-indicator status-${status}`;
+      }
     } else {
       // Reset all indicators if no specific provider/status is given
       this.deepSeekStatus.className = "status-indicator";
@@ -748,19 +816,20 @@ ${input}
       '<em style="color: #666;">سيظهر وصف المهنة هنا بعد الضغط على زر التوليد...</em>';
     this.geminiOutput.innerHTML =
       '<em style="color: #666;">سيظهر وصف المهنة هنا بعد الضغط على زر التوليد...</em>';
-    
+
     // Clear Job Analysis placeholders
     for (let i = 1; i <= 5; i++) {
-        const titleEl = document.getElementById(`job-title-${i}`);
-        const descEl = document.getElementById(`job-desc-${i}`);
-        if (titleEl) titleEl.textContent = `عنوان الوظيفة ${i}`;
-        if (descEl) descEl.innerHTML = `وصف موجز للوظيفة ${i} يوضح طبيعتها والمهام الرئيسية. هذا النص هو مثال مؤقت.`;
+      const titleEl = document.getElementById(`job-title-${i}`);
+      const descEl = document.getElementById(`job-desc-${i}`);
+      if (titleEl) titleEl.textContent = `عنوان الوظيفة ${i}`;
+      if (descEl)
+        descEl.innerHTML = `وصف موجز للوظيفة ${i} يوضح طبيعتها والمهام الرئيسية. هذا النص هو مثال مؤقت.`;
     }
 
     // Clear Activities placeholders
     for (let i = 1; i <= 18; i++) {
-        const activityEl = document.getElementById(`activity-text-${i}`);
-        if (activityEl) activityEl.innerHTML = `النشاط المقترح ${i}`;
+      const activityEl = document.getElementById(`activity-text-${i}`);
+      if (activityEl) activityEl.innerHTML = `النشاط المقترح ${i}`;
     }
   }
 
