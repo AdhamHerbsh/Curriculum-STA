@@ -66,7 +66,8 @@ h6 {
 --------------------------------------------------------------*/
 .loader {
   border: 3px solid #f3f3f3;
-  border-top: 3px solid #ffd584; /* لون دوران اللودر */
+  border-top: 3px solid #ffd584;
+  /* لون دوران اللودر */
   border-radius: 50%;
   width: 18px;
   height: 18px;
@@ -79,28 +80,29 @@ h6 {
 #jobDescriptionOutput {
   overflow-y: auto;
   max-height: 300px;
-  min-height: 150px; /* Or your chosen value */
+  min-height: 150px;
   white-space: pre-wrap;
-  border: 1px solid #ced4da; /* Ensuring it has a border like form-control */
-  padding: 0.375rem 0.75rem; /* Ensuring it has padding like form-control */
-  border-radius: 0.25rem; /* Ensuring it has border-radius like form-control */
+  border: 1px solid #ced4da;
+  padding: 0.375rem 0.75rem;
+  border-radius: 0.25rem;
 }
 
 @keyframes spin {
   0% {
     transform: rotate(0deg);
   }
+
   100% {
     transform: rotate(360deg);
   }
 }
 
 #competenciesContainer {
-  max-height: 600px; /* Or another value that suits the design */
+  max-height: 600px;
   overflow-y: auto;
-  padding: 10px; /* Optional: to provide some spacing if content touches the edges */
-  border: 1px solid #dee2e6; /* Optional: to visually contain the scrollable area */
-  border-radius: 0.25rem; /* Optional: consistent with other Bootstrap elements */
+  padding: 10px;
+  border: 1px solid #dee2e6;
+  border-radius: 0.25rem;
 }
 
 .content-loader {
@@ -109,12 +111,12 @@ h6 {
   align-items: center;
   padding: 20px;
   font-style: italic;
-  color: #6c757d; /* Bootstrap's text-muted color */
+  color: #6c757d;
 }
 
-.content-loader .spinner { /* Optional: if using a spinner */
+.content-loader .spinner {
   border: 4px solid #f3f3f3;
-  border-top: 4px solid #0d6efd; /* Primary color */
+  border-top: 4px solid #0d6efd;
   border-radius: 50%;
   width: 40px;
   height: 40px;
@@ -198,7 +200,7 @@ section {
   line-height: 1px;
   margin: 0 0 5px 0;
   text-transform: uppercase;
-  color: #555555; /* Updated for better contrast */
+  color: #555555;
   font-family: "Poppins", sans-serif;
 }
 
@@ -220,6 +222,7 @@ section {
   font-family: "Poppins", sans-serif;
   color: #151515;
 }
+
 /*--------------------------------------------------------------
 # Footer
 --------------------------------------------------------------*/
@@ -372,6 +375,7 @@ section {
   font-size: 13px;
   color: #fff;
 }
+
 /*--------------------------------------------------------------
 # History Section
 --------------------------------------------------------------*/
@@ -476,7 +480,7 @@ section {
 }
 
 .gemini-header {
-  background: linear-gradient(135deg, #52585c 0%, #343a40 100%); /* Updated for better contrast */
+  background: linear-gradient(135deg, #52585c 0%, #343a40 100%);
 }
 
 .response-content {
@@ -548,9 +552,11 @@ section {
 .status-success {
   background: #28a745;
 }
+
 .status-error {
   background: #dc3545;
 }
+
 .status-pending {
   background: #ffc107;
   animation: pulse 1.5s infinite;
@@ -560,9 +566,11 @@ section {
   0% {
     opacity: 1;
   }
+
   50% {
     opacity: 0.5;
   }
+
   100% {
     opacity: 1;
   }
@@ -577,4 +585,340 @@ section {
     flex-direction: column;
     gap: 5px;
   }
+
+  /* Adjustments for smaller screens to improve layout */
+  .step-section .card-body {
+    padding: 15px;
+    /* Reduce padding */
+  }
+
+  .input-group {
+    flex-direction: column;
+    /* Stack input group elements vertically */
+  }
+
+  .input-group .form-control,
+  .input-group .btn {
+    width: 100%;
+    /* Full width for input and button */
+    margin-bottom: 10px;
+    /* Add space between stacked elements */
+  }
+
+  .d-flex.justify-content-between {
+    flex-direction: column;
+    /* Stack navigation buttons */
+    gap: 10px;
+  }
+
+  .d-flex.justify-content-between .btn {
+    width: 100%;
+    /* Full width for navigation buttons */
+  }
+
+  #jobDescriptionOutput {
+    min-height: 100px;
+    /* Slightly reduce min-height for mobile */
+  }
+}
+
+.step-section {
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.step-section .card-header {
+  font-weight: bold;
+}
+
+.step-section .card-body .btn {
+  margin-right: 5px;
+}
+
+.step-section .btn .loader {
+  border: 3px solid #f3f3f3;
+  border-top: 3px solid #0d6efd;
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  animation: spin 1s linear infinite;
+  display: inline-block;
+  margin-left: 10px;
+  vertical-align: middle;
+}
+
+/* Styles for the AI response container */
+.ai-response-container {
+  border: 1px solid #dee2e6;
+  border-radius: 0.25rem;
+  overflow: hidden;
+  margin-top: 15px;
+  /* Add some space below the generate button */
+}
+
+.ai-response-container .response-header {
+  background-color: #343a40;
+  /* Dark background for header */
+  color: white;
+  padding: 10px 15px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+}
+
+.ai-response-container .response-header i {
+  margin-right: 8px;
+  /* Space between icon and text */
+}
+
+.ai-response-container .response-content {
+  padding: 15px;
+  background-color: #f8f9fa;
+  /* Light background for content */
+  color: #212529;
+  /* Dark text color */
+  line-height: 1.6;
+  white-space: pre-wrap;
+  /* Preserve whitespace and breaks */
+  word-wrap: break-word;
+  /* Break long words */
+}
+
+/* Styles for retry buttons */
+.btn-warning .loader {
+  border-top-color: #fff;
+  /* White loader for warning buttons */
+}
+
+/* Progress bar specific styles */
+#progressWrapper {
+  display: block;
+  /* Ensure it's visible when needed */
+}
+
+#progressLabel {
+  font-weight: bold;
+  color: #343a40 !important;
+  /* Darker text for better contrast */
+}
+
+#progressBar {
+  height: 25px;
+  /* Make progress bar slightly taller */
+  background-color: #e9ecef;
+  /* Lighter background for empty part */
+  border-radius: 0.25rem;
+  overflow: hidden;
+  /* Ensure content is clipped */
+}
+
+#progressBar .progress-bar {
+  background-color: #007bff;
+  /* Primary blue color */
+  color: white;
+  font-weight: bold;
+  text-align: center;
+  transition: width 0.6s ease;
+  /* Smooth transition for width changes */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Styles for activity items in step 2 */
+.activity-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.activity-item .form-check-label {
+  flex-grow: 1;
+  margin-right: 10px;
+}
+
+.activity-item .activity-text {
+  width: 100%;
+  resize: vertical;
+  /* Allow vertical resizing */
+}
+
+.activity-item .ms-2 {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+/* Styles for competency items in step 3 */
+.competency-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.competency-item .d-flex {
+  align-items: flex-start;
+  /* Align text area and button at the top */
+}
+
+.competency-item .competency-text {
+  flex-grow: 1;
+  resize: vertical;
+}
+
+.skills-knowledge {
+  margin-top: 10px;
+  padding-left: 15px;
+  border-left: 3px solid #eee;
+}
+
+.skills-knowledge ul {
+  list-style-type: disc;
+  padding-left: 20px;
+  margin-bottom: 5px;
+}
+
+.skills-knowledge ul li {
+  margin-bottom: 3px;
+}
+
+/* Final Framework Display Styles */
+.framework-summary .stat-card {
+  border-radius: 0.5rem;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  color: white;
+  text-align: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.framework-summary .stat-card h3 {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.framework-summary .stat-card p {
+  font-size: 1rem;
+  margin-bottom: 0;
+}
+
+.framework-details .section {
+  border: 1px solid #e9ecef;
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.framework-details .section h6 {
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #f8f9fa;
+}
+
+.framework-details .section .p-3 {
+  background-color: #f8f9fa;
+  border-radius: 0.25rem;
+}
+
+.activities-summary .activity-summary-item {
+  background-color: #f0f2f5;
+  border-left: 4px solid #28a745;
+}
+
+.competency-summary {
+  background-color: #fdf8e6;
+  /* Light yellow for competencies */
+  border: 1px solid #ffeeba;
+  border-radius: 0.25rem;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.competency-detail {
+  background-color: #ffffff;
+  border: 1px solid #e9ecef;
+  border-radius: 0.25rem;
+  padding: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.skills-list,
+.knowledge-list {
+  background-color: #f0f8ff;
+  border-left: 3px solid #007bff;
+  padding: 0.75rem;
+  border-radius: 0.25rem;
+  margin-top: 0.5rem;
+}
+
+.skills-list ul,
+.knowledge-list ul {
+  list-style-type: none;
+  padding-left: 0;
+  margin-bottom: 0;
+}
+
+.skills-list ul li:before {
+  content: "• ";
+  color: #007bff;
+  font-weight: bold;
+  display: inline-block;
+  width: 1em;
+  margin-left: -1em;
+}
+
+.knowledge-list ul li:before {
+  content: "• ";
+  color: #17a2b8;
+  font-weight: bold;
+  display: inline-block;
+  width: 1em;
+  margin-left: -1em;
+}
+
+.export-section .btn {
+  margin: 0.5rem;
+}
+
+/* Custom message box styles (replacing alert) */
+.custom-alert-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1050;
+  /* Above Bootstrap modals */
+}
+
+.custom-alert-box {
+  background: white;
+  padding: 25px;
+  border-radius: 8px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  text-align: center;
+  max-width: 400px;
+  width: 90%;
+  direction: rtl;
+  /* Ensure RTL for Arabic text */
+}
+
+.custom-alert-box h5 {
+  margin-bottom: 15px;
+  color: #343a40;
+}
+
+.custom-alert-box p {
+  margin-bottom: 20px;
+  color: #6c757d;
+}
+
+.custom-alert-box .btn {
+  padding: 8px 20px;
 }
