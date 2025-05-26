@@ -16,52 +16,76 @@
     <link href="assets/css/style.css" rel="stylesheet" />
   </head>
   <body>
-    <div class="container mt-5">
-      <header class="text-center mb-4">
-        <h1>
-          <i class="bi bi-magic" aria-label="أيقونة سحرية"></i> مصمم إطار
+    <div class="container mt-5 mb-5">
+      <header class="text-center mb-5">
+        <h1 class="display-4 mb-3">
+          <i class="bi bi-robot me-2" aria-label="أيقونة روبوت"></i> مصمم إطار
           المناهج بالذكاء الاصطناعي
         </h1>
-        <p class="lead">
+        <p class="lead text-muted">
           تصميم إطار عمل المناهج الدراسية بخطوات مدعومة بالذكاء الاصطناعي
         </p>
+        <div
+          id="apiWarning"
+          class="alert alert-warning mt-3"
+          role="alert"
+          style="display: none"
+        >
+          <i class="bi bi-exclamation-triangle-fill"></i> يرجى حفظ مفتاح API
+          الخاص بك في الأسفل للمتابعة.
+        </div>
       </header>
 
       <div id="progressWrapper" class="mb-4" style="display: none">
-        <p id="progressLabel" class="text-muted mb-1">
-          الخطوة الحالية: <span id="currentStepName"></span>
+        <p id="progressLabel" class="text-muted mb-2">
+          الخطوة الحالية: <span id="currentStepName" class="fw-bold"></span>
         </p>
-        <div id="progressBar" class="progress">
+        <div
+          id="progressBar"
+          class="progress"
+          role="progressbar"
+          aria-label="شريط التقدم"
+        >
           <div
             class="progress-bar progress-bar-striped progress-bar-animated"
-            role="progressbar"
             style="width: 0%"
             aria-valuenow="0"
             aria-valuemin="0"
             aria-valuemax="100"
           ></div>
         </div>
+        <div class="d-flex justify-content-between mt-2 small text-muted">
+          <span>وصف الوظيفة</span>
+          <span>الأنشطة الرئيسية</span>
+          <span>الجدارات والمهارات</span>
+          <span>تجميع الإطار</span>
+        </div>
       </div>
 
-      <div id="step1" class="step-section card shadow-sm mb-4">
-        <div class="card-header bg-primary text-white">
+      <div id="step1" class="step-section card shadow-lg mb-5">
+        <div class="card-header bg-primary text-white p-3">
           <h2 class="h5 mb-0">
-            <i class="bi bi-card-text" aria-hidden="true"></i> الخطوة 1: وصف
-            الوظيفة
+            <i class="bi bi-card-text me-2" aria-hidden="true"></i> الخطوة 1:
+            وصف الوظيفة
           </h2>
         </div>
-        <div class="card-body">
+        <div class="card-body p-4">
           <div class="mb-3">
             <label for="specializationInfo" class="form-label"
-              >معلومات عامة عن التخصص:</label
+              >معلومات عامة عن التخصص (مثال: تخصص الإلكترونيات والتصنيع):
+              <span class="text-danger">*</span></label
             >
             <textarea
               class="form-control"
               id="specializationInfo"
               rows="5"
-              placeholder="أدخل تفاصيل حول تخصص الإلكترونيات والتصنيع..."
+              placeholder="أدخل تفاصيل حول التخصص، الأهداف، الجمهور المستهدف، وما إلى ذلك."
               aria-label="معلومات عامة عن التخصص"
+              required
             ></textarea>
+            <div class="invalid-feedback">
+              الرجاء إدخال معلومات عامة عن التخصص.
+            </div>
           </div>
 
           <button
@@ -70,31 +94,37 @@
             id="generateJobDescriptionBtn"
             aria-label="توليد وصف الوظيفة باستخدام GEMINI"
           >
-            <i class="bi bi-robot" aria-hidden="true"></i> توليد وصف الوظيفة
-            باستخدام GEMINI
+            <i class="bi bi-robot me-2" aria-hidden="true"></i> توليد وصف
+            الوظيفة باستخدام GEMINI
             <span
-              class="loader"
-              style="display: none"
+              class="loader spinner-border spinner-border-sm ms-2"
+              role="status"
               aria-hidden="true"
+              style="display: none"
             ></span>
           </button>
 
           <div class="mb-3">
             <label for="jobDescriptionOutput" class="form-label"
-              >وصف الوظيفة:</label
+              >وصف الوظيفة المقترح:</label
             >
             <div
-              class="form-control"
+              class="form-control bg-light text-secondary"
               id="jobDescriptionOutput"
               style="min-height: 150px; overflow-y: auto"
               aria-live="polite"
               aria-atomic="true"
               role="region"
-            ></div>
+            >
+              سيظهر وصف الوظيفة المُنشأ بواسطة GEMINI هنا.
+            </div>
+          </div>
+          <div id="jobRolesSection" class="mt-4" style="display: none">
+            <div id="jobRolesList"></div>
           </div>
 
-          <div class="my-3">
-            <p class="mb-2">اختر وصف الوظيفة للمتابعة:</p>
+          <div class="my-4 p-3 border rounded bg-light">
+            <p class="mb-2 fw-bold">اختر مصدر وصف الوظيفة للمتابعة:</p>
             <div class="form-check">
               <input
                 class="form-check-input"
@@ -103,7 +133,6 @@
                 id="choiceGemini"
                 value="gemini"
                 checked
-                aria-label="استخدام الوصف المُنشأ بواسطة GEMINI"
               />
               <label class="form-check-label" for="choiceGemini">
                 استخدام الوصف المُنشأ بواسطة GEMINI
@@ -116,24 +145,25 @@
                 name="descriptionChoice"
                 id="choiceUser"
                 value="user"
-                aria-label="استخدام وصفي الخاص (المُدخل أعلاه)"
               />
               <label class="form-check-label" for="choiceUser">
-                استخدام وصفي الخاص (المُدخل أعلاه)
+                استخدام معلومات التخصص المدخلة
               </label>
             </div>
           </div>
 
-          <div class="d-flex justify-content-end mt-4">
+          <div class="d-flex justify-content-end mt-4 pt-3 border-top">
             <button
               type="button"
-              class="btn btn-info"
+              class="btn btn-info btn-lg"
               id="step1NextBtn"
-              onclick="showStepWithValidation(2)"
               aria-label="التالي إلى الخطوة 2"
             >
               التالي إلى الخطوة 2
-              <i class="bi bi-arrow-left-circle-fill" aria-hidden="true"></i>
+              <i
+                class="bi bi-arrow-left-circle-fill ms-2"
+                aria-hidden="true"
+              ></i>
             </button>
           </div>
         </div>
@@ -141,26 +171,26 @@
 
       <div
         id="step2"
-        class="step-section card shadow-sm mb-4"
+        class="step-section card shadow-lg mb-5"
         style="display: none"
       >
-        <div class="card-header bg-success text-white">
+        <div class="card-header bg-success text-white p-3">
           <h2 class="h5 mb-0">
-            <i class="bi bi-list-check" aria-hidden="true"></i> الخطوة 2:
+            <i class="bi bi-list-check me-2" aria-hidden="true"></i> الخطوة 2:
             الأنشطة الرئيسية
           </h2>
         </div>
-        <div class="card-body">
+        <div class="card-body p-4">
           <div class="mb-3">
             <label for="jobDescriptionDisplayStep2" class="form-label"
               >وصف الوظيفة المعتمد (من الخطوة 1):</label
             >
             <textarea
-              class="form-control"
+              class="form-control bg-light text-secondary"
               id="jobDescriptionDisplayStep2"
               rows="6"
               readonly
-              placeholder="سيتم عرض وصف الوظيفة المختار هنا..."
+              placeholder="سيتم عرض وصف الوظيفة المختار هنا من الخطوة السابقة..."
               aria-label="وصف الوظيفة المعتمد من الخطوة 1"
             ></textarea>
           </div>
@@ -171,75 +201,81 @@
             id="generateActivitiesBtn"
             aria-label="توليد الأنشطة الرئيسية باستخدام GEMINI"
           >
-            <i class="bi bi-robot" aria-hidden="true"></i> توليد الأنشطة
+            <i class="bi bi-robot me-2" aria-hidden="true"></i> توليد الأنشطة
             الرئيسية باستخدام GEMINI
             <span
-              class="loader"
-              style="display: none"
+              class="loader spinner-border spinner-border-sm ms-2"
+              role="status"
               aria-hidden="true"
+              style="display: none"
             ></span>
           </button>
 
           <div class="mb-3">
-            <label class="form-label">الأنشطة الرئيسية المقترحة:</label>
+            <label class="form-label d-block mb-2"
+              >الأنشطة الرئيسية المقترحة (اختر أو أضف):
+              <span class="text-danger">*</span></label
+            >
             <div
               id="activitiesListContainer"
-              class="list-group"
-              style="
-                max-height: 300px;
-                overflow-y: auto;
-                border: 1px solid #ced4da;
-                border-radius: 0.25rem;
-                padding: 10px;
-              "
+              class="list-group list-group-flush border rounded p-2"
+              style="max-height: 300px; overflow-y: auto"
               aria-live="polite"
               aria-atomic="true"
               role="region"
             >
-              <p class="text-muted">
-                سيتم عرض الأنشطة المقترحة هنا كقائمة اختيار.
+              <p class="text-muted text-center py-3">
+                سيتم عرض الأنشطة المقترحة هنا كقائمة يمكن اختيارها وتحريرها.
               </p>
+            </div>
+            <div class="invalid-feedback">
+              الرجاء اختيار أو إضافة نشاط واحد على الأقل.
             </div>
           </div>
 
-          <div class="input-group mt-3 mb-3">
+          <div class="input-group mt-3 mb-4">
             <input
               type="text"
               class="form-control"
               id="customActivityInput"
-              placeholder="إضافة نشاط مخصص..."
+              placeholder="أدخل نشاطًا مخصصًا هنا..."
               aria-label="إضافة نشاط مخصص"
             />
             <button
-              class="btn btn-outline-secondary"
+              class="btn btn-outline-secondary rounded-end"
               type="button"
               id="addCustomActivityBtn"
               aria-label="إضافة نشاط"
             >
-              <i class="bi bi-plus-circle" aria-hidden="true"></i> إضافة نشاط
+              <i class="bi bi-plus-circle me-2" aria-hidden="true"></i> إضافة
+              نشاط
             </button>
           </div>
 
-          <div class="d-flex justify-content-between mt-4">
+          <div class="d-flex justify-content-between mt-4 pt-3 border-top">
             <button
               type="button"
-              class="btn btn-secondary"
+              class="btn btn-secondary btn-lg"
               id="step2PrevBtn"
-              onclick="showStepWithValidation(1)"
               aria-label="السابق إلى الخطوة 1"
             >
-              <i class="bi bi-arrow-right-circle-fill" aria-hidden="true"></i>
+              <i
+                class="bi bi-arrow-right-circle-fill me-2"
+                aria-hidden="true"
+              ></i>
               السابق إلى الخطوة 1
             </button>
             <button
               type="button"
-              class="btn btn-success"
+              class="btn btn-success btn-lg"
               id="step2NextBtn"
-              onclick="showStepWithValidation(3)"
               aria-label="التالي إلى الخطوة 3"
             >
               التالي إلى الخطوة 3
-              <i class="bi bi-arrow-left-circle-fill" aria-hidden="true"></i>
+              <i
+                class="bi bi-arrow-left-circle-fill ms-2"
+                aria-hidden="true"
+              ></i>
             </button>
           </div>
         </div>
@@ -247,34 +283,102 @@
 
       <div
         id="step3"
-        class="step-section card shadow-sm mb-4"
+        class="step-section card shadow-lg mb-5"
         style="display: none"
       >
-        <div class="card-header bg-warning text-dark">
+        <div class="card-header bg-warning text-dark p-3">
           <h2 class="h5 mb-0">
-            <i class="bi bi-tools" aria-hidden="true"></i> الخطوة 3: الجدارات
-            والمهارات
+            <i class="bi bi-tools me-2" aria-hidden="true"></i> الخطوة 3:
+            الجدارات والمهارات
           </h2>
         </div>
-        <div class="card-body">
-          <p class="text-muted">
-            سيتم عرض محتوى الخطوة الثالثة الخاص بتحديد الجدارات والمهارات
-            المطلوبة هنا.
+        <div class="card-body p-4">
+          <p class="text-muted mb-4">
+            في هذه الخطوة، سيتم تحديد الجدارات والمهارات اللازمة بناءً على وصف
+            الوظيفة والأنشطة الرئيسية.
           </p>
-          <div class="d-flex justify-content-between mt-4">
+
+          <button
+            type="button"
+            class="btn btn-primary mt-2 mb-3"
+            id="generateCompetenciesBtn"
+            aria-label="توليد الجدارات والمهارات باستخدام GEMINI"
+          >
+            <i class="bi bi-robot me-2" aria-hidden="true"></i> توليد الجدارات
+            والمهارات باستخدام GEMINI
+            <span
+              class="loader spinner-border spinner-border-sm ms-2"
+              role="status"
+              aria-hidden="true"
+              style="display: none"
+            ></span>
+          </button>
+
+          <div class="mb-3">
+            <label class="form-label d-block mb-2"
+              >الجدارات والمهارات المقترحة (اختر أو أضف):
+              <span class="text-danger">*</span></label
+            >
+            <div
+              id="competenciesListContainer"
+              class="list-group list-group-flush border rounded p-2"
+              style="max-height: 300px; overflow-y: auto"
+              aria-live="polite"
+              aria-atomic="true"
+              role="region"
+            >
+              <p class="text-muted text-center py-3">
+                سيتم عرض الجدارات والمهارات المقترحة هنا.
+              </p>
+            </div>
+            <div class="invalid-feedback">
+              الرجاء اختيار أو إضافة جدارة واحدة على الأقل.
+            </div>
+          </div>
+
+          <div class="input-group mt-3 mb-4">
+            <input
+              type="text"
+              class="form-control"
+              id="customCompetencyInput"
+              placeholder="أدخل جدارة أو مهارة مخصصة هنا..."
+              aria-label="إضافة جدارة أو مهارة مخصصة"
+            />
             <button
-              class="btn btn-secondary"
-              onclick="showStepWithValidation(2)"
+              class="btn btn-outline-secondary rounded-end"
+              type="button"
+              id="addCustomCompetencyBtn"
+              aria-label="إضافة جدارة"
+            >
+              <i class="bi bi-plus-circle me-2" aria-hidden="true"></i> إضافة
+              جدارة
+            </button>
+          </div>
+
+          <div class="d-flex justify-content-between mt-4 pt-3 border-top">
+            <button
+              type="button"
+              class="btn btn-secondary btn-lg"
+              id="step3PrevBtn"
               aria-label="السابق إلى الخطوة 2"
             >
-              <i class="bi bi-arrow-right-circle" aria-hidden="true"></i> السابق
+              <i
+                class="bi bi-arrow-right-circle-fill me-2"
+                aria-hidden="true"
+              ></i>
+              السابق إلى الخطوة 2
             </button>
             <button
-              class="btn btn-warning float-end"
-              onclick="showStepWithValidation(4)"
+              type="button"
+              class="btn btn-warning btn-lg text-dark"
+              id="step3NextBtn"
               aria-label="التالي إلى الخطوة 4"
             >
-              التالي <i class="bi bi-arrow-left-circle" aria-hidden="true"></i>
+              التالي إلى الخطوة 4
+              <i
+                class="bi bi-arrow-left-circle-fill ms-2"
+                aria-hidden="true"
+              ></i>
             </button>
           </div>
         </div>
@@ -282,55 +386,122 @@
 
       <div
         id="step4"
-        class="step-section card shadow-sm mb-4"
+        class="step-section card shadow-lg mb-5"
         style="display: none"
       >
-        <div class="card-header bg-info text-white">
+        <div class="card-header bg-info text-white p-3">
           <h2 class="h5 mb-0">
-            <i class="bi bi-file-earmark-text" aria-hidden="true"></i> الخطوة 4:
-            تجميع الإطار
+            <i class="bi bi-file-earmark-text me-2" aria-hidden="true"></i>
+            الخطوة 4: تجميع الإطار
           </h2>
         </div>
-        <div class="card-body">
-          <p class="text-muted">
-            محتوى الخطوة الرابعة الخاص بتجميع إطار المنهج النهائي سيظهر هنا.
+        <div class="card-body p-4">
+          <p class="text-muted mb-4">
+            هذه هي الخطوة الأخيرة لتجميع إطار المنهج الدراسي بناءً على جميع
+            المدخلات والخيارات التي تم تحديدها.
           </p>
+
           <button
-            class="btn btn-secondary"
-            onclick="showStepWithValidation(3)"
-            aria-label="السابق إلى الخطوة 3"
-          >
-            <i class="bi bi-arrow-right-circle" aria-hidden="true"></i> السابق
-          </button>
-          <button
-            class="btn btn-info float-end"
-            onclick="compileFramework()"
+            class="btn btn-primary btn-lg mb-4"
+            type="button"
+            id="compileFrameworkBtn"
             aria-label="تجميع الإطار النهائي"
           >
-            تجميع <i class="bi bi-check-circle" aria-hidden="true"></i>
+            <i class="bi bi-check-circle me-2" aria-hidden="true"></i> تجميع
+            الإطار النهائي
+            <span
+              class="loader spinner-border spinner-border-sm ms-2"
+              role="status"
+              aria-hidden="true"
+              style="display: none"
+            ></span>
           </button>
+
+          <div
+            id="finalFrameworkOutput"
+            class="border rounded p-3 bg-light"
+            style="min-height: 250px; overflow-y: auto"
+          >
+            <p class="text-muted text-center py-5">
+              سيظهر إطار المنهج النهائي هنا.
+            </p>
+          </div>
+
+          <div class="d-flex justify-content-end mt-3">
+            <button
+              class="btn btn-success me-2"
+              type="button"
+              id="downloadFrameworkBtn"
+              style="display: none"
+              aria-label="تنزيل إطار المنهج"
+            >
+              <i class="bi bi-download me-2" aria-hidden="true"></i> تنزيل
+              الإطار
+            </button>
+            <button
+              class="btn btn-secondary"
+              type="button"
+              id="printFrameworkBtn"
+              style="display: none"
+              aria-label="طباعة إطار المنهج"
+            >
+              <i class="bi bi-printer me-2" aria-hidden="true"></i> طباعة الإطار
+            </button>
+          </div>
+
+          <div class="d-flex justify-content-between mt-4 pt-3 border-top">
+            <button
+              type="button"
+              class="btn btn-secondary btn-lg"
+              id="step4PrevBtn"
+              aria-label="السابق إلى الخطوة 3"
+            >
+              <i
+                class="bi bi-arrow-right-circle-fill me-2"
+                aria-hidden="true"
+              ></i>
+              السابق إلى الخطوة 3
+            </button>
+            <button
+              type="button"
+              class="btn btn-danger btn-lg"
+              id="startOverBtn"
+              aria-label="البدء من جديد"
+              style="display: none"
+            >
+              <i class="bi bi-arrow-clockwise me-2"></i> البدء من جديد
+            </button>
+          </div>
         </div>
       </div>
 
       <footer class="mt-5 pt-4 border-top">
-        <div class="row">
-          <div class="col-md-6 offset-md-3">
+        <div class="row justify-content-center">
+          <div class="col-md-8">
             <h5 class="text-center mb-3">إعدادات مفتاح API</h5>
             <div class="input-group mb-3">
               <input
                 type="password"
                 id="apiKeyInput"
                 class="form-control"
-                placeholder="أدخل مفتاح API الخاص بك هنا..."
+                placeholder="أدخل مفتاح API الخاص بك هنا (مطلوب لعمل GEMINI)"
                 aria-label="أدخل مفتاح API الخاص بك هنا"
               />
+              <button
+                class="btn btn-outline-secondary"
+                type="button"
+                id="toggleApiKeyVisibility"
+                aria-label="تبديل رؤية مفتاح API"
+              >
+                <i class="bi bi-eye"></i>
+              </button>
               <button
                 class="btn btn-primary"
                 type="button"
                 id="saveApiKeyBtn"
                 aria-label="حفظ مفتاح API"
               >
-                <i class="bi bi-save" aria-hidden="true"></i> حفظ المفتاح
+                <i class="bi bi-save me-2" aria-hidden="true"></i> حفظ المفتاح
               </button>
             </div>
             <p
@@ -343,8 +514,44 @@
       </footer>
     </div>
 
+    <!-- Alert Modal -->
+    <div
+      class="modal fade"
+      id="alertModal"
+      tabindex="-1"
+      aria-labelledby="alertModalTitle"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="alertModalTitle"></h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="إغلاق"
+            ></button>
+          </div>
+          <div class="modal-body" id="alertModalBody"></div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" id="alertConfirmBtn">
+              موافق
+            </button>
+            <button
+              type="button"
+              class="btn btn-secondary"
+              id="alertCancelBtn"
+              data-bs-dismiss="modal"
+              style="display: none"
+            >
+              إلغاء
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
     <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <script src="assets/js/api.js"></script>
     <script src="assets/js/main.js"></script>
   </body>
 </html>
