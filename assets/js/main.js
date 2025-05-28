@@ -9,9 +9,9 @@
  * @param {string} prompt The prompt to send to the API.
  * @returns {Promise<string>} The API response text.
  */
+const apiKey = localStorage.getItem("geminiApiKey");
 async function callGeminiAPI(prompt) {
   try {
-    const apiKey = localStorage.getItem("geminiApiKey");
     if (!apiKey) {
       throw new Error("API key not found");
     }
@@ -79,6 +79,54 @@ async function callGeminiAPI(prompt) {
     console.error("Gemini API Error:", error);
     throw error;
   }
+}
+
+// Helper function to call Gemini API
+async function callGemini(prompt) {
+  if (!apiKey) {
+    throw new Error("API key not found. Please save your API key first.");
+  }
+
+  const response = await fetch(
+    "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=" +
+      apiKey,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        contents: [
+          {
+            parts: [
+              {
+                text: prompt,
+              },
+            ],
+          },
+        ],
+      }),
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error(`API call failed: ${response.statusText}`);
+  }
+
+  const data = await response.json();
+  return data.candidates[0].content.parts[0].text;
+}
+
+// Helper function to show errors in the alert modal
+function showError(message) {
+  const modal = new bootstrap.Modal(document.getElementById("alertModal"));
+  const titleElement = document.getElementById("alertModalTitle");
+  const bodyElement = document.getElementById("alertModalBody");
+
+  titleElement.textContent = "خطأ";
+  bodyElement.textContent = message;
+
+  modal.show();
 }
 
 // Global state for curriculum data
@@ -157,6 +205,11 @@ const downloadFrameworkBtn = document.getElementById("downloadFrameworkBtn");
 const printFrameworkBtn = document.getElementById("printFrameworkBtn");
 const startOverBtn = document.getElementById("startOverBtn");
 const step4PrevBtn = document.getElementById("step4PrevBtn");
+
+// Job roles functionality
+const suggestJobRolesBtn = document.getElementById("suggestJobRolesBtn");
+const jobRolesSection = document.getElementById("jobRolesSection");
+const jobRolesList = document.getElementById("jobRolesList");
 
 // --- Data Management Functions ---
 
@@ -529,12 +582,14 @@ async function handleGenerateJobDescription() {
       jobRoles: jobRoles,
     };
     choiceGeminiRadio.checked = true; // Auto-select Gemini choice
-
     showCustomAlert(
       "نجاح",
       "تم توليد وصف الوظيفة بنجاح بواسطة GEMINI.",
       "success"
     );
+
+    // Show the suggest roles button after successful generation
+    suggestJobRolesBtn.style.display = "block";
   } catch (error) {
     console.error("Error generating job description:", error);
     jobDescriptionOutput.innerHTML =
@@ -544,6 +599,8 @@ async function handleGenerateJobDescription() {
       "فشل في توليد وصف الوظيفة. يرجى التحقق من مفتاح API والمحاولة مرة أخرى.",
       "error"
     );
+    // Hide the suggest roles button if there's an error
+    suggestJobRolesBtn.style.display = "none";
   } finally {
     generateJobDescriptionBtn.querySelector(".loader").style.display = "none";
     generateJobDescriptionBtn.disabled = false;
@@ -1164,7 +1221,7 @@ function handleAddCustomCompetency() {
     return;
   }
 
-  // Use modals for gathering additional information
+  // Use modals for gathering missing information
   const modalBody = document.querySelector("#alertModalBody");
   const modalTitle = document.querySelector("#alertModalTitle");
   const confirmBtn = document.querySelector("#alertConfirmBtn");
@@ -1894,4 +1951,84 @@ document.addEventListener("DOMContentLoaded", () => {
   console.log("تم تهيئة مصمم إطار المناهج بالذكاء الاصطناعي");
   console.log("الإصدار: 2.0.0"); // Updated version number
   console.log("جاهز للاستخدام!");
+
+  // Show the suggest roles button after generating job description
+  async function generateDescription() {
+    // ... existing code ...
+
+    // After successful generation, show the suggest roles button
+    suggestJobRolesBtn.style.display = "block";
+  }
+
+  suggestJobRolesBtn.addEventListener("click", async () => {
+    try {
+      // Show loading state
+      const spinner = suggestJobRolesBtn.querySelector(".loader");
+      spinner.style.display = "inline-block";
+      suggestJobRolesBtn.disabled = true;
+
+      // Get the job description
+      const jobDescription = jobDescriptionOutput.textContent;
+
+      // Extract job roles from the description using Gemini
+      const prompt = `بناءً على وصف الوظيفة التالي، اقترح من 3 إلى 6 أدوار وظيفية مناسبة. ركز على الأدوار التي تتناسب مع المهارات والمتطلبات المذكورة. قدم لكل دور وصفًا موجزًا من جملتين إلى ثلاث جمل عن المسؤوليات والمهارات المطلوبة.
+
+قم بتنسيق الإجابة بالشكل التالي (بدون علامات markdown):
+{
+  "roles": [
+    {
+      "title": "المسمى الوظيفي",
+      "description": "وصف الدور"
+    }
+  ]
+}
+
+وصف الوظيفة:
+${jobDescription}`;
+
+      const response = await callGeminiAPI(prompt);
+      let roles;
+
+      try {
+        // Clean up the response - remove markdown code blocks if present
+        const cleanResponse = response.replace(/```(?:json)?\s*|\s*```/g, "");
+        roles = JSON.parse(cleanResponse);
+      } catch (e) {
+        console.error("Failed to parse Gemini response as JSON:", e);
+        throw new Error("Invalid response format from AI");
+      }
+
+      // Clear existing roles
+      jobRolesList.innerHTML = "";
+
+      // Create cards for each role
+      roles.roles.forEach((role) => {
+        const card = document.createElement("div");
+        card.className = "card m-1";
+        card.innerHTML = `
+          <div class="card-body">
+            <h5 class="card-title">${role.title}</h5>
+            <p class="card-text">${role.description}</p>
+          </div>
+        `;
+        jobRolesList.appendChild(card);
+      });
+
+      // Show the job roles section
+      jobRolesSection.style.display = "block";
+
+      showCustomAlert("نجاح", "تم اقتراح الأدوار الوظيفية بنجاح!", "success");
+    } catch (error) {
+      console.error("Error suggesting job roles:", error);
+      showCustomAlert(
+        "خطأ",
+        "حدث خطأ أثناء اقتراح الأدوار الوظيفية. يرجى المحاولة مرة أخرى.",
+        "error"
+      );
+    } finally {
+      // Hide loading state
+      suggestJobRolesBtn.querySelector(".loader").style.display = "none";
+      suggestJobRolesBtn.disabled = false;
+    }
+  });
 });

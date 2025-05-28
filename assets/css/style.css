@@ -574,3 +574,63 @@ footer {
     padding: 0 15px;
   }
 }
+
+/* Job Role Cards */
+.job-role-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.125);
+  border-radius: 0.5rem;
+  height: 100%;
+}
+
+.job-role-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.job-role-card .card-body {
+  padding: 1.5rem;
+}
+
+.job-role-card .card-title {
+  color: #2c3e50;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.job-role-card .card-text {
+  color: #5d6778;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+/* Animation for cards appearing */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.job-role-card {
+  animation: fadeInUp 0.5s ease-out forwards;
+}
+
+/* Stagger animation for multiple cards */
+#jobRolesList .col:nth-child(1) .job-role-card {
+  animation-delay: 0.1s;
+}
+
+#jobRolesList .col:nth-child(2) .job-role-card {
+  animation-delay: 0.2s;
+}
+
+#jobRolesList .col:nth-child(3) .job-role-card {
+  animation-delay: 0.3s;
+}

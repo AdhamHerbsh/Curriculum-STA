@@ -119,8 +119,30 @@
               سيظهر وصف الوظيفة المُنشأ بواسطة GEMINI هنا.
             </div>
           </div>
+
+          <button
+            type="button"
+            class="btn btn-success mt-3 mb-3"
+            id="suggestJobRolesBtn"
+            aria-label="اقتراح الأدوار الوظيفية"
+            style="display: none"
+          >
+            <i class="bi bi-lightbulb me-2" aria-hidden="true"></i> اقتراح
+            الأدوار الوظيفية
+            <span
+              class="loader spinner-border spinner-border-sm ms-2"
+              role="status"
+              aria-hidden="true"
+              style="display: none"
+            ></span>
+          </button>
+
           <div id="jobRolesSection" class="mt-4" style="display: none">
-            <div id="jobRolesList"></div>
+            <h4 class="mb-3">الأدوار الوظيفية المقترحة:</h4>
+            <div
+              id="jobRolesList"
+              class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4"
+            ></div>
           </div>
 
           <div class="my-4 p-3 border rounded bg-light">
