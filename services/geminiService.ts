@@ -1,11 +1,13 @@
 import { GoogleGenAI, Type, Schema } from "@google/genai";
 
-const apiKey = process.env.API_KEY || "";
+const apiKey = process.env.API_KEY || "AIzaSyA8mpF39fAgbuQCLWzOjJ6Ute2O0ZOPPkU";
 const ai = new GoogleGenAI({ apiKey });
 
 const modelName = "gemini-2.5-flash"; // Recommended model for text tasks
 
-export const generateSpecializationData = async (jobDescription: string): Promise<{ suggestedNames: string[], generalSummary: string }> => {
+export const generateSpecializationData = async (
+  jobDescription: string
+): Promise<{ suggestedNames: string[]; generalSummary: string }> => {
   if (!apiKey) throw new Error("API Key is missing.");
 
   const prompt = `Based on the following detailed job description for a three-year vocational technician role, propose five concise and professional specialization names in Arabic (e.g., فني صيانة أنظمة...) and provide a single, short paragraph (2-3 sentences max) general summary of the role in Arabic.
@@ -27,16 +29,17 @@ ${jobDescription}
             suggestedNames: {
               type: Type.ARRAY,
               items: { type: Type.STRING },
-              description: "5 proposed names for the vocational specialization in Arabic."
+              description:
+                "5 proposed names for the vocational specialization in Arabic.",
             },
             generalSummary: {
               type: Type.STRING,
-              description: "A concise, 2-3 sentence general job summary."
-            }
+              description: "A concise, 2-3 sentence general job summary.",
+            },
           },
-          required: ["suggestedNames", "generalSummary"]
-        }
-      }
+          required: ["suggestedNames", "generalSummary"],
+        },
+      },
     });
 
     const text = response.text;
@@ -48,7 +51,9 @@ ${jobDescription}
   }
 };
 
-export const generateActivitiesList = async (jobDescription: string): Promise<string[]> => {
+export const generateActivitiesList = async (
+  jobDescription: string
+): Promise<string[]> => {
   if (!apiKey) throw new Error("API Key is missing.");
 
   const prompt = `Based on the following detailed job description for a three-year vocational technician role, generate exactly 15 distinct, sequential, and professionally phrased professional activities (tasks) that a person in this role must perform. The activities should reflect a typical workflow starting from planning/analysis to execution and reporting.
@@ -67,9 +72,10 @@ ${jobDescription}
         responseSchema: {
           type: Type.ARRAY,
           items: { type: Type.STRING },
-          description: "Array of exactly 15 sequential professional activities (tasks) in Arabic."
-        }
-      }
+          description:
+            "Array of exactly 15 sequential professional activities (tasks) in Arabic.",
+        },
+      },
     });
 
     const text = response.text;
@@ -87,38 +93,62 @@ const competencyResponseSchema: Schema = {
   items: {
     type: Type.OBJECT,
     properties: {
-      activityIndex: { type: Type.INTEGER, description: "The index of the activity in the provided list (0-based)." },
+      activityIndex: {
+        type: Type.INTEGER,
+        description:
+          "The index of the activity in the provided list (0-based).",
+      },
       competencies: {
         type: Type.ARRAY,
         items: {
           type: Type.OBJECT,
           properties: {
-            name: { type: Type.STRING, description: "Name of the competency/unit." },
-            knowledge: { 
-                type: Type.ARRAY, 
-                items: { type: Type.STRING },
-                description: "List of theoretical knowledge points." 
+            name: {
+              type: Type.STRING,
+              description: "Name of the competency/unit.",
             },
-            skill: { 
-                type: Type.ARRAY, 
-                items: { type: Type.STRING },
-                description: "List of practical, measurable skills." 
+            knowledge: {
+              type: Type.ARRAY,
+              items: { type: Type.STRING },
+              description: "List of theoretical knowledge points.",
             },
-            unitDescription: { type: Type.STRING, description: "Brief description of the competency unit." },
-            criteria: { type: Type.ARRAY, items: { type: Type.STRING }, description: "3 performance criteria." }
+            skill: {
+              type: Type.ARRAY,
+              items: { type: Type.STRING },
+              description: "List of practical, measurable skills.",
+            },
+            unitDescription: {
+              type: Type.STRING,
+              description: "Brief description of the competency unit.",
+            },
+            criteria: {
+              type: Type.ARRAY,
+              items: { type: Type.STRING },
+              description: "3 performance criteria.",
+            },
           },
-          required: ["name", "knowledge", "skill", "unitDescription", "criteria"]
-        }
-      }
+          required: [
+            "name",
+            "knowledge",
+            "skill",
+            "unitDescription",
+            "criteria",
+          ],
+        },
+      },
     },
-    required: ["activityIndex", "competencies"]
-  }
+    required: ["activityIndex", "competencies"],
+  },
 };
 
-export const generateCompetenciesForActivities = async (selectedActivities: string[]): Promise<any[]> => {
+export const generateCompetenciesForActivities = async (
+  selectedActivities: string[]
+): Promise<any[]> => {
   if (!apiKey) throw new Error("API Key is missing.");
 
-  const activitiesListString = selectedActivities.map((act, index) => `${index}. ${act}`).join("\n");
+  const activitiesListString = selectedActivities
+    .map((act, index) => `${index}. ${act}`)
+    .join("\n");
 
   const prompt = `You are an expert vocational curriculum designer. 
   For each of the following Selected Vocational Activities, identify AT LEAST 5 core Competencies (Jadarat) required to perform them.
@@ -144,8 +174,8 @@ export const generateCompetenciesForActivities = async (selectedActivities: stri
       contents: prompt,
       config: {
         responseMimeType: "application/json",
-        responseSchema: competencyResponseSchema
-      }
+        responseSchema: competencyResponseSchema,
+      },
     });
 
     const text = response.text;
